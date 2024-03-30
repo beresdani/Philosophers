@@ -48,35 +48,88 @@ void	put_str(char *str)
 void	*routine(void *arg)
 {
 	int		index;
-	//int		start_eat_time;
 	t_args	*args;
 
 	args = (t_args *)arg;
-	//start_eat_time = 
 	index = *args->phil_index;
+
 	pthread_mutex_lock(&mutex);
+	printf("Phil %d has taken a fork\n", index);
+	printf("Phil %d has taken a fork\n", index);
 	printf("Phil %d is eating\n", index);
 	pthread_mutex_unlock(&mutex);
-
+	usleep(args->time_eat);
 	pthread_mutex_lock(&mutex);
 	printf("Phil %d is sleeping\n", index);
 	pthread_mutex_unlock(&mutex);
-
+	usleep(args->time_sleep);
 	pthread_mutex_lock(&mutex);
 	printf("Phil %d is thinking\n", index);
 	pthread_mutex_unlock(&mutex);
 
-	pthread_mutex_lock(&mutex);
-	printf("Phil %d has taken a fork\n", index);
-	pthread_mutex_unlock(&mutex);
-
-	pthread_mutex_lock(&mutex);
+	/*pthread_mutex_lock(&mutex);
 	printf("Phil %d has died\n", index);
-	pthread_mutex_unlock(&mutex);
-	//free(args->phil_index);
+	pthread_mutex_unlock(&mutex);*/
 	return (0);
 }
 
+int	main(int argc, char **argv)
+{
+	int			i;
+	pthread_t   philo[philo_atoi(argv[1])];
+	t_args		*args;
+
+	if (argc < 5 || argc > 6)
+	{
+		printf("Wrong input\n");
+		return (1);
+	}
+	pthread_mutex_init(&mutex, NULL);
+	
+	
+	i = 0;
+	while (i < philo_atoi(argv[1]))
+	{
+		args = malloc(sizeof(t_args));
+		if (args == NULL)
+			return (1);
+		args->num_phil = philo_atoi(argv[1]);
+		args->time_to_die = philo_atoi(argv[2]) * 1000;
+		args->time_eat = philo_atoi(argv[3]) * 1000;
+		args->time_sleep = philo_atoi(argv[4]) * 1000;
+		args->is_end = 0;
+		if (argv[5])
+		{
+			args->is_end = 1;
+			args->num_rounds = philo_atoi(argv[5]);
+		}
+		args->start_time = get_timestamp();
+		args->phil_index = malloc(sizeof(int));
+		if (args->phil_index == NULL)
+			return (1);
+		*(args->phil_index) = i + 1;
+		if (pthread_create(&philo[i], NULL, &routine, args) != 0)
+		{
+			free(args->phil_index);
+            perror("Failed to create thread");
+            return (1);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < philo_atoi(argv[1]))
+	{
+		if (pthread_join(philo[i], NULL) != 0)
+			return 2;
+		i++;
+	}
+	free(args->phil_index);
+	free(args); // Free memory after thread completes
+	pthread_mutex_destroy(&mutex);
+	return (0);
+}
+
+/*
 int	main(int argc, char **argv)
 {
 	int			i;
@@ -97,9 +150,9 @@ int	main(int argc, char **argv)
 		if (args_array[i] == NULL)
 			return (1);
 		args_array[i]->num_phil = philo_atoi(argv[1]);
-		args_array[i]->time_to_die = philo_atoi(argv[2]);
-		args_array[i]->time_eat = philo_atoi(argv[3]);
-		args_array[i]->time_sleep = philo_atoi(argv[4]);
+		args_array[i]->time_to_die = philo_atoi(argv[2]) * 1000;
+		args_array[i]->time_eat = philo_atoi(argv[3]) * 1000;
+		args_array[i]->time_sleep = philo_atoi(argv[4]) * 1000;
 		args_array[i]->is_end = 0;
 		if (argv[5])
 		{
@@ -132,3 +185,4 @@ int	main(int argc, char **argv)
 	pthread_mutex_destroy(&mutex);
 	return (0);
 }
+*/
