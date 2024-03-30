@@ -17,14 +17,15 @@
 
 typedef struct s_args
 {
-    int num_phil;
-    int time_sleep;
-    int time_eat;
-    int time_to_die;
-    int num_rounds;
-    int start_time;
-    int is_end;
-    int *phil_index;
+    int 		num_phil;
+    int 		time_sleep;
+    int 		time_eat;
+    int 		time_to_die;
+	long long	last_fed;
+    int 		num_rounds;
+    long long	start_time;
+    int 		is_end;
+    int 		*phil_index;
 }   t_args;
 
 

@@ -51,23 +51,45 @@ void	*routine(void *arg)
 {
 	int		index;
 	t_args	*args;
+	int		loop;
+	int		num_eats;
 
 	args = (t_args *)arg;
 	index = *args->phil_index;
-
-	pthread_mutex_lock(&mutex);
-	printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
-	printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
-	printf("%lld Phil %d is eating\n", get_timestamp(), index);
-	pthread_mutex_unlock(&mutex);
-	usleep(args->time_eat);
-	pthread_mutex_lock(&mutex);
-	printf("%lld Phil %d is sleeping\n", get_timestamp(), index);
-	pthread_mutex_unlock(&mutex);
-	usleep(args->time_sleep);
-	pthread_mutex_lock(&mutex);
-	printf("%lld Phil %d is thinking\n", get_timestamp(), index);
-	pthread_mutex_unlock(&mutex);
+	loop = 1;
+	num_eats = 0;
+	while (loop)
+	{
+		pthread_mutex_lock(&mutex);
+		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
+		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
+		pthread_mutex_unlock(&mutex);
+		printf("%lld\n", get_timestamp());
+		printf("%lld\n", args->last_fed);
+		printf("%d\n", args->time_to_die);
+		if (get_timestamp() - args->last_fed > args->time_to_die)
+		{
+			pthread_mutex_lock(&mutex);
+			printf("%lld Phil %d has died\n", get_timestamp(), index);
+			pthread_mutex_unlock(&mutex);
+			return NULL;
+		}	
+		pthread_mutex_lock(&mutex);
+		printf("%lld Phil %d is eating\n", get_timestamp(), index);
+		pthread_mutex_unlock(&mutex);
+		if (args->is_end && num_eats == args->num_rounds)
+			return NULL;
+		usleep(args->time_eat - 1);
+		args->last_fed = get_timestamp();
+		pthread_mutex_lock(&mutex);
+		printf("%lld Phil %d is sleeping\n", get_timestamp(), index);
+		pthread_mutex_unlock(&mutex);
+		usleep(args->time_sleep);
+		pthread_mutex_lock(&mutex);
+		printf("%lld Phil %d is thinking\n", get_timestamp(), index);
+		pthread_mutex_unlock(&mutex);
+		num_eats++;
+	}
 
 	/*pthread_mutex_lock(&mutex);
 	printf("Phil %d has died\n", index);
@@ -106,6 +128,7 @@ int	main(int argc, char **argv)
 			args->num_rounds = philo_atoi(argv[5]);
 		}
 		args->start_time = get_timestamp();
+		args->last_fed = get_timestamp();
 		args->phil_index = malloc(sizeof(int));
 		if (args->phil_index == NULL)
 			return (1);
@@ -126,7 +149,7 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	free(args->phil_index);
-	free(args); // Free memory after thread completes
+	free(args);
 	pthread_mutex_destroy(&mutex);
 	return (0);
 }
