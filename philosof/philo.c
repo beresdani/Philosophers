@@ -73,70 +73,62 @@ void	*routine(void *arg)
 	pthread_mutex_lock(&mutex);
 	printf("Phil %d has died\n", index);
 	pthread_mutex_unlock(&mutex);
-	free(args->phil_index);
-	return (0);
-}
-
-int	run_threads(t_args *args)
-{
-	pthread_t   philo[args->num_phil];
-    int         i;
-
-	i = 0;
-	pthread_mutex_init(&mutex, NULL);
-	while (i < args->num_phil)
-	{
-		args = (t_args *)malloc(sizeof(t_args));
-		if (args == NULL)
-			return (1);
-		args->phil_index = malloc(sizeof(int));
-		if (args->phil_index == NULL)
-		{
-			free (args);
-			return (1);
-		}
-		*args->phil_index = i + 1;
-		//printf("%d\n", *a);
-		if (pthread_create(&philo[i], NULL, &routine, args) != 0)
-		{
-			free (args->phil_index);
-			free (args);
-			perror("Failed to create thread");
-			return (1);
-		}
-		i++;
-	}
-	i = 0;
-	while (i < args->num_phil)
-	{
-		if (pthread_join(philo[i], NULL) != 0)
-			return 2;
-		i++;
-	}
-	pthread_mutex_destroy(&mutex);
+	//free(args->phil_index);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	t_args	args;
+	int			i;
+	pthread_t   philo[philo_atoi(argv[1])];
+	t_args		*args_array[philo_atoi(argv[1])];
 
 	if (argc < 5 || argc > 6)
 	{
 		printf("Wrong input\n");
 		return (1);
 	}
-	args.num_phil = philo_atoi(argv[1]);
-	args.time_to_die = philo_atoi(argv[2]);
-	args.time_eat = philo_atoi(argv[3]);
-	args.time_sleep = philo_atoi(argv[4]);
-	args.is_end = 0;
-	if (argv[5])
+	
+	pthread_mutex_init(&mutex, NULL);
+	i = 0;
+	while (i < philo_atoi(argv[1]))
 	{
-		args.is_end = 1;
-		args.num_rounds = philo_atoi(argv[5]);
+		args_array[i] = malloc(sizeof(t_args));
+		if (args_array[i] == NULL)
+			return (1);
+		args_array[i]->num_phil = philo_atoi(argv[1]);
+		args_array[i]->time_to_die = philo_atoi(argv[2]);
+		args_array[i]->time_eat = philo_atoi(argv[3]);
+		args_array[i]->time_sleep = philo_atoi(argv[4]);
+		args_array[i]->is_end = 0;
+		if (argv[5])
+		{
+			args_array[i]->is_end = 1;
+			args_array[i]->num_rounds = philo_atoi(argv[5]);
+		}
+		args_array[i]->start_time = get_timestamp();
+		args_array[i]->phil_index = malloc(sizeof(int));
+		if (args_array[i]->phil_index == NULL)
+			return (1);
+		*(args_array[i]->phil_index) = i + 1;
+		if (pthread_create(&philo[i], NULL, &routine, args_array[i]) != 0)
+		{
+			free(args_array[i]->phil_index);
+            free(args_array[i]);
+            perror("Failed to create thread");
+            return (1);
+		}
+		i++;
 	}
-	args.start_time = get_timestamp();
-	run_threads(&args);
+	i = 0;
+	while (i < philo_atoi(argv[1]))
+	{
+		if (pthread_join(philo[i], NULL) != 0)
+			return 2;
+		free(args_array[i]->phil_index);
+        free(args_array[i]); // Free memory after thread completes
+		i++;
+	}
+	pthread_mutex_destroy(&mutex);
 	return (0);
 }
