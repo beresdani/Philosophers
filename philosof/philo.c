@@ -2,16 +2,18 @@
 
 pthread_mutex_t mutex;
 
-int	get_timestamp()
+long long	get_timestamp()
 {
-	int	timestamp;
+	long long		timestamp_1;
+	long long		timestamp_2;
+	long long		timestamp;
 
 	struct timeval tv;
     gettimeofday(&tv, NULL); // Get current time
 
-    //printf("Seconds since Epoch: %ld\n", tv.tv_sec);
-    //printf("Microseconds: %ld\n", tv.tv_usec);
-	timestamp = tv.tv_usec/1000;
+	timestamp_1 = tv.tv_usec/1000;
+	timestamp_2 = tv.tv_sec*1000;
+	timestamp = timestamp_2 + timestamp_1;
 	return (timestamp);
 }
 
@@ -54,17 +56,17 @@ void	*routine(void *arg)
 	index = *args->phil_index;
 
 	pthread_mutex_lock(&mutex);
-	printf("Phil %d has taken a fork\n", index);
-	printf("Phil %d has taken a fork\n", index);
-	printf("Phil %d is eating\n", index);
+	printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
+	printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
+	printf("%lld Phil %d is eating\n", get_timestamp(), index);
 	pthread_mutex_unlock(&mutex);
 	usleep(args->time_eat);
 	pthread_mutex_lock(&mutex);
-	printf("Phil %d is sleeping\n", index);
+	printf("%lld Phil %d is sleeping\n", get_timestamp(), index);
 	pthread_mutex_unlock(&mutex);
 	usleep(args->time_sleep);
 	pthread_mutex_lock(&mutex);
-	printf("Phil %d is thinking\n", index);
+	printf("%lld Phil %d is thinking\n", get_timestamp(), index);
 	pthread_mutex_unlock(&mutex);
 
 	/*pthread_mutex_lock(&mutex);

@@ -32,11 +32,11 @@ typedef struct s_args
  * 	FUNCTION PROTOTYPES
  *********************************/
 
-int     get_timestamp();
-int	    philo_atoi(char	*str);
-void	put_str(char *str);
-void	*routine(void *arg);
-int     run_threads(t_args *args);
+long long	get_timestamp();
+int			philo_atoi(char	*str);
+void		put_str(char *str);
+void		*routine(void *arg);
+int			run_threads(t_args *args);
 
 
 #endif
