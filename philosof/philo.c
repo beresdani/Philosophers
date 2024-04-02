@@ -17,7 +17,6 @@ long long	get_timestamp()
 	return (timestamp);
 }
 
-
 int	philo_atoi(char	*str)
 {
 	int	result;
@@ -64,10 +63,7 @@ void	*routine(void *arg)
 		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
 		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
 		pthread_mutex_unlock(&mutex);
-		printf("%lld\n", get_timestamp());
-		printf("%lld\n", args->last_fed);
-		printf("%d\n", args->time_to_die);
-		if (get_timestamp() - args->last_fed > args->time_to_die)
+		if ((get_timestamp() - args->last_fed) >= args->time_to_die)
 		{
 			pthread_mutex_lock(&mutex);
 			printf("%lld Phil %d has died\n", get_timestamp(), index);
@@ -77,17 +73,32 @@ void	*routine(void *arg)
 		pthread_mutex_lock(&mutex);
 		printf("%lld Phil %d is eating\n", get_timestamp(), index);
 		pthread_mutex_unlock(&mutex);
-		if (args->is_end && num_eats == args->num_rounds)
-			return NULL;
-		usleep(args->time_eat - 1);
 		args->last_fed = get_timestamp();
+		if (args->is_end && num_eats == args->num_rounds - 1)
+			return NULL;
+		usleep(args->time_eat * 1000);
 		pthread_mutex_lock(&mutex);
 		printf("%lld Phil %d is sleeping\n", get_timestamp(), index);
 		pthread_mutex_unlock(&mutex);
-		usleep(args->time_sleep);
+		usleep(args->time_sleep * 1000);
+		if ((get_timestamp() - args->last_fed) >= args->time_to_die)
+		{
+			pthread_mutex_lock(&mutex);
+			printf("%lld Phil %d has died\n", get_timestamp(), index);
+			pthread_mutex_unlock(&mutex);
+			return NULL;
+		}	
 		pthread_mutex_lock(&mutex);
 		printf("%lld Phil %d is thinking\n", get_timestamp(), index);
 		pthread_mutex_unlock(&mutex);
+		usleep((args->time_to_die - (get_timestamp() - args->last_fed))*1000);
+		if ((get_timestamp() - args->last_fed) >= args->time_to_die)
+		{
+			pthread_mutex_lock(&mutex);
+			printf("%lld Phil %d has died\n", get_timestamp(), index);
+			pthread_mutex_unlock(&mutex);
+			return NULL;
+		}	
 		num_eats++;
 	}
 
@@ -118,9 +129,9 @@ int	main(int argc, char **argv)
 		if (args == NULL)
 			return (1);
 		args->num_phil = philo_atoi(argv[1]);
-		args->time_to_die = philo_atoi(argv[2]) * 1000;
-		args->time_eat = philo_atoi(argv[3]) * 1000;
-		args->time_sleep = philo_atoi(argv[4]) * 1000;
+		args->time_to_die = philo_atoi(argv[2]);
+		args->time_eat = philo_atoi(argv[3]);
+		args->time_sleep = philo_atoi(argv[4]);
 		args->is_end = 0;
 		if (argv[5])
 		{

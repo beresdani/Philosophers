@@ -18,9 +18,9 @@
 typedef struct s_args
 {
     int 		num_phil;
-    int 		time_sleep;
-    int 		time_eat;
-    int 		time_to_die;
+    long long	time_sleep;
+    long long	time_eat;
+    long long	time_to_die;
 	long long	last_fed;
     int 		num_rounds;
     long long	start_time;
