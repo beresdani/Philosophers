@@ -85,8 +85,9 @@ void	*routine(void *arg)
 		{
 			pthread_mutex_lock(&mutex);
 			printf("%lld Phil %d has died\n", get_timestamp(), index);
+			args->death = 1;
 			pthread_mutex_unlock(&mutex);
-			return NULL;
+			exit(0);
 		}	
 		pthread_mutex_lock(&mutex);
 		printf("%lld Phil %d is thinking\n", get_timestamp(), index);
@@ -133,6 +134,7 @@ int	main(int argc, char **argv)
 		args->time_eat = philo_atoi(argv[3]);
 		args->time_sleep = philo_atoi(argv[4]);
 		args->is_end = 0;
+		args->death = 0;
 		if (argv[5])
 		{
 			args->is_end = 1;
@@ -155,6 +157,8 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < philo_atoi(argv[1]))
 	{
+		if (args->death)
+			exit(0);
 		if (pthread_join(philo[i], NULL) != 0)
 			return 2;
 		i++;

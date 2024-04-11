@@ -26,6 +26,7 @@ typedef struct s_args
     long long	start_time;
     int 		is_end;
     int 		*phil_index;
+    int         death;
 }   t_args;
 
 
