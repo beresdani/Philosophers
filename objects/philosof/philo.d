@@ -66,7 +66,8 @@ objects/philosof/philo.o: philosof/philo.c header/philo.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min.h \
-  /usr/include/x86_64-linux-gnu/sys/time.h
+  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/string.h \
+  /usr/include/strings.h
 
 header/philo.h:
 
@@ -221,3 +222,7 @@ header/philo.h:
 /usr/include/x86_64-linux-gnu/bits/pthread_stack_min.h:
 
 /usr/include/x86_64-linux-gnu/sys/time.h:
+
+/usr/include/string.h:
+
+/usr/include/strings.h:
