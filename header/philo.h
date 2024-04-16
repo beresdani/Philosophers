@@ -31,7 +31,7 @@ typedef struct s_args
     int 		    *phil_index;
     int             death;
     int             *fork_array;
-    t_common        common;
+    struct s_common *common_data;
 }   t_args;
 
 typedef struct s_common

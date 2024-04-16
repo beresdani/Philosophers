@@ -81,7 +81,7 @@ int	main(int argc, char **argv)
 		args->time_sleep = philo_atoi(argv[4]);
 		args->is_end = 0;
 		args->death = 0;
-		args->dead_philo = -1;
+		args->common_data->dead_philo = -1;
 		if (argv[5])
 		{
 			args->is_end = 1;
@@ -115,7 +115,7 @@ int	main(int argc, char **argv)
 				pthread_mutex_lock(&args->mutex); // Lock the mutex after joining the thread
 				i++;
 			}
-			printf("%lld Phil %d died\n", get_timestamp(), args->dead_philo);
+			printf("%lld Phil %d died\n", get_timestamp(), args->common_data->dead_philo);
 			pthread_mutex_unlock(&args->mutex); // Unlock the mutex after canceling all threads
 			pthread_mutex_destroy(&args->mutex);
 			free(args->phil_index);
