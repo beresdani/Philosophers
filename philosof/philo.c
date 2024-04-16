@@ -1,244 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dberes <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/16 13:45:09 by dberes            #+#    #+#             */
+/*   Updated: 2024/04/16 13:45:12 by dberes           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-
-
-
-long long	get_timestamp()
-{
-	long long		timestamp_1;
-	long long		timestamp_2;
-	long long		timestamp;
-
-	struct timeval tv;
-    gettimeofday(&tv, NULL); // Get current time
-
-	timestamp_1 = tv.tv_usec/1000;
-	timestamp_2 = tv.tv_sec*1000;
-	timestamp = timestamp_2 + timestamp_1;
-	return (timestamp);
-}
-
-int	philo_atoi(char	*str)
-{
-	int	result;
-	int	digit;
-	int	i;
-
-	i = 0;
-	result = 0;
-	while(str[i])
-	{
-		digit = str[i] - 48;
-		result = result * 10 + digit;
-		i++;
-	}
-	return (result);
-}
-
-void	put_str(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-}
-
-int	check_death(t_args *args)
-{
-	if ((get_timestamp() - args->last_fed) >= args->time_to_die)
-	{
-		//printf ("%lld\n", get_timestamp() - args->last_fed);
-		pthread_mutex_lock(&args->mutex);
-		args->death = 1;
-		args->dead_philo = *args->phil_index;
-		pthread_mutex_unlock(&args->mutex);
-		return (1);
-	}
-	return (0);	
-}
-
-void	sleep_cycle(t_args *args, int index)
-{
-	pthread_mutex_lock(&args->mutex);
-	printf("%lld Phil %d is sleeping\n", get_timestamp(), index);
-	pthread_mutex_unlock(&args->mutex);
-	usleep(args->time_sleep * 1000);	
-}
-
-void	think_cycle(t_args *args, int index)
-{
-	printf("%lld Phil %d is thinking\n", get_timestamp(), index);
-	pthread_mutex_unlock(&args->mutex);
-	usleep(args->time_sleep *1000);
-}
-
-void	stop_eating(t_args *args, int index)
-{
-	pthread_mutex_lock(&args->mutex);
-	printf("Phil %d has finished eating\n", index);
-	args->fork_array[index - 1] = 0;
-	if (index != args->num_phil)
-		args->fork_array[index] = 0;
-	else
-		args->fork_array[0] = 0;
-	pthread_mutex_unlock(&args->mutex);
-}
-
-int	try_to_eat(t_args *args, int index)
-{
-	int	fork1;
-
-	fork1 = 0;
-	pthread_mutex_lock(&args->mutex);
-	/*if (args->fork_array[index - 1])
-		printf("Phil %d Fork taken\n", index);*/
-	if (!args->fork_array[index - 1])
-	{
-		args->fork_array[index - 1] = 1;
-		fork1 = 1;
-		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
-	}
-	pthread_mutex_unlock(&args->mutex);
-
-	//fork 2 + eating
-	pthread_mutex_lock(&args->mutex);
-	if (fork1 && index == args->num_phil && !args->fork_array[0])
-	{
-		args->fork_array[0] = 1;
-		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
-		printf("%lld Phil %d is eating\n", get_timestamp(), index);
-		args->last_fed = get_timestamp();
-		usleep(args->time_eat * 1000);
-		pthread_mutex_unlock(&args->mutex);
-		stop_eating(args, index);
-		return (1);
-	}
-	else if (fork1 && !args->fork_array[index])
-	{
-		args->fork_array[index] = 1;
-		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
-		printf("%lld Phil %d is eating\n", get_timestamp(), index);
-		args->last_fed = get_timestamp();
-		usleep(args->time_eat * 1000);
-		pthread_mutex_unlock(&args->mutex);
-		stop_eating(args, index);
-		return (1);
-	}
-	args->fork_array[index - 1] = 0;
-	pthread_mutex_unlock(&args->mutex);
-	return (0);
-}
-
-void	last_phil_fork2(t_args *args, int index)
-{
-	/*if (args->fork_array[0])
-		printf("Phil %d Fork taken\n", index);*/
-	if (!args->fork_array[0])
-	{
-		args->fork_array[0] = 1;
-		printf("%lld Phil %d has taken a fork\n", get_timestamp(), index);
-		printf("%lld Phil %d is eating\n", get_timestamp(), index);
-		args->last_fed = get_timestamp();
-		usleep(args->time_eat * 1000);
-	}
-	//pthread_mutex_unlock(&args->mutex);
-}
-
-int	even_loop(t_args *args, int index)
-{
-	int	num_eats;
-
-	num_eats = 0;
-	while (1)
-	{
-		if (check_death(args) || args->death)
-			return (0);
-
-		//thinking
-		printf("%lld Phil %d is thinking\n", get_timestamp(), index);
-		usleep(args->time_eat * 1000);
-		while (1)
-		{
-			if (check_death(args) || args->death)
-				return (0);
-			if (try_to_eat(args, index) == 1)
-				break ;
-		}
-		usleep(args->time_eat * 1000);
-		if (check_death(args) || args->death)
-			return (0);
-
-		//fork 1
-		
-		if (check_death(args) || args->death)
-			return (0);
-		if (args->is_end && num_eats == args->num_rounds - 1)
-		{
-			args->ended = 1;
-			return (0);
-		}
-
-		//finished_eating
-		/*pthread_mutex_lock(&args->mutex);
-		if (is_eating == 1)
-		{
-			is_eating = 0;
-			stop_eating(args, index);
-		}*/
-		
-		//sleeping
-		sleep_cycle(args, index);
-		if (check_death(args) || args->death)
-			return (0);
-		num_eats++;
-	}
-}
-
-int	odd_loop(t_args *args, int index)
-{
-	int	num_eats;
-
-	num_eats = 0;
-	while (1)
-	{
-		while (1)
-		{
-			if (check_death(args) || args->death)
-				return (0);
-			if (try_to_eat(args, index) == 1)
-				break ;
-		}
-		if (check_death(args) || args->death)
-			return (0);
-		if (args->is_end && num_eats == args->num_rounds - 1)
-		{
-			args->ended = 1;
-			return (0);
-		}
-
-		//finished_eating
-		/*pthread_mutex_lock(&args->mutex);
-		if (is_eating == 1)
-		{
-			is_eating = 0;
-			stop_eating(args, index);
-		}*/
-		
-		//sleeping
-		sleep_cycle(args, index);
-		if (check_death(args) || args->death)
-			return (0);
-		
-		//thinking
-		think_cycle(args, index);
-		if (check_death(args) || args->death)
-			return (0);
-		num_eats++;
-	}
-}
 
 void	*routine(void *arg)
 {
@@ -288,12 +60,6 @@ int	main(int argc, char **argv)
 		return 1;
 	}
 	memset(fork_array, 0, philo_atoi(argv[1]) * sizeof(int));
-	/*i= 0;
-	while (i < philo_atoi(argv[1]))
-	{
-		printf("%d\n", args->fork_array[i]);
-		i++;
-	}*/
 	i = 0;
 	while (i < philo_atoi(argv[1]))
 	{
@@ -315,6 +81,7 @@ int	main(int argc, char **argv)
 		args->time_sleep = philo_atoi(argv[4]);
 		args->is_end = 0;
 		args->death = 0;
+		args->dead_philo = -1;
 		if (argv[5])
 		{
 			args->is_end = 1;
@@ -363,16 +130,4 @@ int	main(int argc, char **argv)
 	}
 	free(args);
 	return (0);
-}
-
-void print_fork_array(t_args *args)
-{
-	int i;
-
-	i = 0;
-	while (i < args->num_phil)
-	{
-		printf("%d\n", args->fork_array[i]);
-		i++;
-	}
 }
