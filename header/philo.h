@@ -48,9 +48,10 @@ int         check_death(t_args *args);
 void        print_fork_array(t_args *args);
 void		sleep_cycle(t_args *args, int index);
 void		think_cycle(t_args *args, int index);
-void        odd_loop(t_args *args, int index);
-void        even_loop(t_args *args, int index);
-void        last_phil_fork2(t_args *args, int index, int *is_eating);
+int			odd_loop(t_args *args, int index);
+int			even_loop(t_args *args, int index);
+void		last_phil_fork2(t_args *args, int index);
+int			try_to_eat(t_args *args, int index);
 
 
 
