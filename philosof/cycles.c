@@ -19,9 +19,8 @@ int	check_death(t_args *args, int index)
 		//printf ("%lld\n", get_timestamp() - args->last_fed);
 		pthread_mutex_lock(&args->mutex);
 		args->death = 1;
-		printf("Dead philo: %d\n", args->common_data->dead_philo);
-		args->common_data->dead_philo = index;
-		printf("Dead philo index: %d\n", args->common_data->dead_philo);
+		if (args->common_data->dead_philo == -1)
+			args->common_data->dead_philo = index;
 		pthread_mutex_unlock(&args->mutex);
 		return (1);
 	}

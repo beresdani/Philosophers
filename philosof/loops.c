@@ -29,6 +29,8 @@ int	try_to_eat(t_args *args, int index)
 
 	//fork 2 + eating
 	pthread_mutex_lock(&args->mutex);
+	if (!args->fork_array[0])
+		printf("check: %d\n", args->num_phil);
 	if (fork1 && index == args->num_phil && !args->fork_array[0])
 	{
 		args->fork_array[0] = 1;
@@ -82,8 +84,6 @@ int	even_loop(t_args *args, int index)
 	{
 		if (check_death(args, index) || args->death)
 			return (1);
-
-		//thinking
 		printf("%lld Phil %d is thinking\n", get_timestamp(), index);
 		usleep(args->time_eat * 1000);
 		while (1)
@@ -96,18 +96,11 @@ int	even_loop(t_args *args, int index)
 		usleep(args->time_eat * 1000);
 		if (check_death(args, index) || args->death)
 			return (1);
-
-		//fork 1
-		
-		if (check_death(args, index) || args->death)
-			return (1);
 		if (args->is_end && num_eats == args->num_rounds - 1)
 		{
 			args->ended = 1;
 			return (0);
 		}
-
-		//sleeping
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
@@ -136,13 +129,9 @@ int	odd_loop(t_args *args, int index)
 			args->ended = 1;
 			return (0);
 		}
-
-		//sleeping
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		
-		//thinking
 		think_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);

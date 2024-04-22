@@ -46,6 +46,7 @@ int	main(int argc, char **argv)
 	pthread_t   	philo[philo_atoi(argv[1])];
 	//pthread_mutex_t	mutex;
 	t_args			*args;
+	t_common		*common_data;
 	int				*fork_array;
 
 	if (argc < 5 || argc > 6)
@@ -60,6 +61,13 @@ int	main(int argc, char **argv)
 		return 1;
 	}
 	memset(fork_array, 0, philo_atoi(argv[1]) * sizeof(int));
+	common_data = malloc(sizeof(t_common));
+	if (common_data == NULL) 
+	{
+    	printf("Memory allocation failed.\n");
+		return 1;
+	}
+	common_data->dead_philo = -1;
 	i = 0;
 	while (i < philo_atoi(argv[1]))
 	{
@@ -74,6 +82,7 @@ int	main(int argc, char **argv)
 		printf("Mutex initialization failed.\n");
 		return 1;
    		}
+		args->common_data = common_data;
 		args->num_phil = philo_atoi(argv[1]);
 		args->fork_array = fork_array;
 		args->time_to_die = philo_atoi(argv[2]);
@@ -81,7 +90,6 @@ int	main(int argc, char **argv)
 		args->time_sleep = philo_atoi(argv[4]);
 		args->is_end = 0;
 		args->death = 0;
-		args->common_data->dead_philo = -1;
 		if (argv[5])
 		{
 			args->is_end = 1;
