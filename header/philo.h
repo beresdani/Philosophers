@@ -56,7 +56,7 @@ void		sleep_cycle(t_args *args, int index);
 void		think_cycle(t_args *args, int index);
 int			odd_loop(t_args *args, int index);
 int			even_loop(t_args *args, int index);
-void		last_phil_fork2(t_args *args, int index);
+int         last_phil_loop(t_args *args, int index);
 int			try_to_eat(t_args *args, int index);
 void        stop_eating(t_args *args, int index);
 

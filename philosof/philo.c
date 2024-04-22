@@ -32,7 +32,9 @@ void	*routine(void *arg)
 	}
 	else
 	{
-		if (index%2 == 1)
+		if (index == args->num_phil)
+			last_phil_loop(args, index);
+		else if (index%2 == 1)
 			odd_loop(args, index);
 		else
 			even_loop(args, index);
@@ -131,6 +133,13 @@ int	main(int argc, char **argv)
 		}
 		if (args->ended)
 		{
+			while (i < philo_atoi(argv[1]))
+			{
+				pthread_mutex_unlock(&args->mutex); // Unlock the mutex before canceling the thread
+				pthread_join(philo[i], NULL); // Wait for the thread to exit
+				pthread_mutex_lock(&args->mutex); // Lock the mutex after joining the thread
+				i++;
+			}
 			pthread_mutex_destroy(&args->mutex);
 			free(args->phil_index);
 			break ;

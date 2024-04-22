@@ -29,8 +29,6 @@ int	try_to_eat(t_args *args, int index)
 
 	//fork 2 + eating
 	pthread_mutex_lock(&args->mutex);
-	if (!args->fork_array[0])
-		printf("check: %d\n", args->num_phil);
 	if (fork1 && index == args->num_phil && !args->fork_array[0])
 	{
 		args->fork_array[0] = 1;
@@ -60,10 +58,36 @@ int	try_to_eat(t_args *args, int index)
 	return (0);
 }
 
-void	last_phil_fork2(t_args *args, int index)
+int	last_phil_loop(t_args *args, int index)
 {
-	/*if (args->fork_array[0])
-		printf("Phil %d Fork taken\n", index);*/
+		int	num_eats;
+
+	num_eats = 0;
+	while (1)
+	{
+		sleep_cycle(args, index);
+		if (check_death(args, index) || args->death)
+			return (1);
+		think_cycle(args, index);
+		if (check_death(args, index) || args->death)
+			return (1);
+		while (1)
+		{
+			if (check_death(args, index) || args->death)
+				return (1);
+			if (try_to_eat(args, index) == 1)
+				break ;
+		}
+		if (check_death(args, index) || args->death)
+			return (1);
+		if (args->is_end && num_eats == args->num_rounds - 1)
+		{
+			args->ended = 1;
+			return (0);
+		}
+		num_eats++;
+	}
+	/*
 	if (!args->fork_array[0])
 	{
 		args->fork_array[0] = 1;
@@ -72,7 +96,7 @@ void	last_phil_fork2(t_args *args, int index)
 		args->last_fed = get_timestamp();
 		usleep(args->time_eat * 1000);
 	}
-	//pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_unlock(&args->mutex);*/
 }
 
 int	even_loop(t_args *args, int index)
@@ -93,14 +117,14 @@ int	even_loop(t_args *args, int index)
 			if (try_to_eat(args, index) == 1)
 				break ;
 		}
-		usleep(args->time_eat * 1000);
-		if (check_death(args, index) || args->death)
-			return (1);
 		if (args->is_end && num_eats == args->num_rounds - 1)
 		{
 			args->ended = 1;
 			return (0);
 		}
+		if (check_death(args, index) || args->death)
+			return (1);
+		
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
