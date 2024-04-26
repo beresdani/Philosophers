@@ -19,6 +19,9 @@
 typedef struct s_args
 {
     pthread_mutex_t mutex;
+    pthread_mutex_t fork_mutex;
+    pthread_mutex_t eat_mutex;
+    pthread_mutex_t die_mutex;
     int 		    num_phil;
     long long	    time_sleep;
     long long	    time_eat;
@@ -30,7 +33,7 @@ typedef struct s_args
     int             ended;
     int 		    *phil_index;
     int             death;
-    int             *fork_array;
+    pthread_mutex_t *fork_array;
     struct s_common *common_data;
 }   t_args;
 

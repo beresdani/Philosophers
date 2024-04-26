@@ -18,8 +18,6 @@ int	try_to_eat(t_args *args, int index)
 
 	fork1 = 0;
 	pthread_mutex_lock(&args->mutex);
-	/*if (args->fork_array[index - 1])
-		printf("Phil %d Fork taken\n", index);*/
 	if (!args->fork_array[index - 1])
 	{
 		args->fork_array[index - 1] = 1;
@@ -108,6 +106,7 @@ int	even_loop(t_args *args, int index)
 	{
 		if (check_death(args, index) || args->death)
 			return (1);
+		//change printf with putstr
 		printf("%lld Phil %d is thinking\n", get_timestamp(), index);
 		usleep(args->time_eat * 1000);
 		while (1)

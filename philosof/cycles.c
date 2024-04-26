@@ -37,6 +37,7 @@ void	sleep_cycle(t_args *args, int index)
 
 void	think_cycle(t_args *args, int index)
 {
+	pthread_mutex_lock(&args->mutex);
 	printf("%lld Phil %d is thinking\n", get_timestamp(), index);
 	pthread_mutex_unlock(&args->mutex);
 	usleep(args->time_sleep *1000);
@@ -45,11 +46,18 @@ void	think_cycle(t_args *args, int index)
 void	stop_eating(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->mutex);
-	//printf("Phil %d has finished eating\n", index);
 	args->fork_array[index - 1] = 0;
-	if (index != args->num_phil)
-		args->fork_array[index] = 0;
-	else
-		args->fork_array[0] = 0;
 	pthread_mutex_unlock(&args->mutex);
+	if (index != args->num_phil)
+	{
+		pthread_mutex_lock(&args->mutex);
+		args->fork_array[index] = 0;
+		pthread_mutex_unlock(&args->mutex);
+	}
+	else
+	{
+		pthread_mutex_lock(&args->mutex);
+		args->fork_array[0] = 0;
+		pthread_mutex_unlock(&args->mutex);
+	}
 }

@@ -16,13 +16,9 @@ void	*routine(void *arg)
 {
 	int		index;
 	t_args	*args;
-	int		loop;
 
 	args = (t_args *)arg;
 	index = *args->phil_index;
-	loop = 1;
-	//printf("fork_array status are the start: \n");
-	//print_fork_array(args);
 	if (args->num_phil % 2 == 0)
 	{
 		if (index%2 == 1)
@@ -46,7 +42,6 @@ int	main(int argc, char **argv)
 {
 	int				i;
 	pthread_t   	philo[philo_atoi(argv[1])];
-	//pthread_mutex_t	mutex;
 	t_args			*args;
 	t_common		*common_data;
 	int				*fork_array;
@@ -81,8 +76,8 @@ int	main(int argc, char **argv)
 		}
 		if (pthread_mutex_init(&args->mutex, NULL) != 0) 
 		{
-		printf("Mutex initialization failed.\n");
-		return 1;
+			printf("Mutex initialization failed.\n");
+			return 1;
    		}
 		args->common_data = common_data;
 		args->num_phil = philo_atoi(argv[1]);
@@ -106,6 +101,7 @@ int	main(int argc, char **argv)
 		*(args->phil_index) = i + 1;
 		if (pthread_create(&philo[i], NULL, &routine, args) != 0)
 		{
+			//all previous threads must stop come back from routine and join to finish counting backward i--
 			free(args->phil_index);
             printf("Failed to create thread");
             return (1);

@@ -21,10 +21,11 @@ OPT=#-O0
 DEPFLAGS=-MP -MD
 
 # flags that are specific to this project
-EXTRAFLAGS=-pthread
+EXTRAFLAGS=-pthread 
 
 # automatically add the -I onto each include directory
 CFLAGS=-Wall -Wextra -Werror -g $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)
+# 
 
 # for-style iteration (foreach) and regular expression completions (wildcard)
 CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.c))
