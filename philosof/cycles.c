@@ -30,7 +30,7 @@ int	check_death(t_args *args, int index)
 void	sleep_cycle(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->mutex);
-	printf("%lld Phil %d is sleeping\n", get_timestamp(), index);
+	printf("%lld %d is sleeping\n", get_timestamp(), index);
 	pthread_mutex_unlock(&args->mutex);
 	usleep(args->time_sleep * 1000);	
 }
@@ -38,15 +38,16 @@ void	sleep_cycle(t_args *args, int index)
 void	think_cycle(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->mutex);
-	printf("%lld Phil %d is thinking\n", get_timestamp(), index);
+	printf("%lld %d is thinking\n", get_timestamp(), index);
 	pthread_mutex_unlock(&args->mutex);
 	usleep(args->time_sleep *1000);
 }
 
+/*
 void	stop_eating(t_args *args, int index)
 {
-	pthread_mutex_lock(&args->mutex);
-	args->fork_array[index - 1] = 0;
+	pthread_mutex_lock(&args->fork_array[index - 1]);
+
 	pthread_mutex_unlock(&args->mutex);
 	if (index != args->num_phil)
 	{
@@ -60,4 +61,4 @@ void	stop_eating(t_args *args, int index)
 		args->fork_array[0] = 0;
 		pthread_mutex_unlock(&args->mutex);
 	}
-}
+} */
