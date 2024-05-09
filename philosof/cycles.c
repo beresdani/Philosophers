@@ -16,7 +16,6 @@ int	check_death(t_args *args, int index)
 {
 	if ((get_timestamp() - args->last_fed) >= args->time_to_die)
 	{
-		//printf ("%lld\n", get_timestamp() - args->last_fed);
 		pthread_mutex_lock(&args->mutex);
 		args->death = 1;
 		if (args->common_data->dead_philo == -1)
@@ -41,6 +40,18 @@ void	think_cycle(t_args *args, int index)
 	printf("%lld %d is thinking\n", get_timestamp(), index);
 	pthread_mutex_unlock(&args->mutex);
 	usleep(args->time_sleep *1000);
+}
+
+int	check_end(t_args *args, int num_eats)
+{
+	pthread_mutex_lock(&args->mutex);
+	if (args->is_end && num_eats == args->num_rounds - 1)
+	{
+		args->ended = 1;
+		return (1);
+	}
+	pthread_mutex_unlock(&args->mutex);
+	return (0);
 }
 
 /*

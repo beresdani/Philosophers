@@ -57,14 +57,12 @@ int	last_phil_loop(t_args *args, int index)
 		think_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		try_to_eat_last(args, index);
+		if (args->num_phil != 1)
+			try_to_eat_last(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		if (args->is_end && num_eats == args->num_rounds - 1)
-		{
-			args->ended = 1;
-			return (0);
-		}
+		if (check_end(args, num_eats))
+			return (1);
 		num_eats++;
 	}
 	/*
@@ -90,15 +88,10 @@ int	even_loop(t_args *args, int index)
 			return (1);
 		//change printf with putstr
 		printf("%lld %d is thinking\n", get_timestamp(), index);
-		usleep(args->time_eat * 1000);
-		if (check_death(args, index) || args->death)
-			return (1);
+		//usleep(args->time_eat *1000);
 		try_to_eat(args, index);
-		if (args->is_end && num_eats == args->num_rounds - 1)
-		{
-			args->ended = 1;
-			return (0);
-		}
+		if (check_end(args, num_eats))
+			return (1);
 		if (check_death(args, index) || args->death)
 			return (1);
 		sleep_cycle(args, index);
@@ -114,17 +107,12 @@ int	odd_loop(t_args *args, int index)
 
 	num_eats = 0;
 	while (1)
-	{
-		if (check_death(args, index) || args->death)
-			return (1);
+	{	
 		try_to_eat(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		if (args->is_end && num_eats == args->num_rounds - 1)
-		{
-			args->ended = 1;
-			return (0);
-		}
+		if (check_end(args, num_eats))
+			return (1);
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);

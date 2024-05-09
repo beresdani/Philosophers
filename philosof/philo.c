@@ -41,17 +41,15 @@ void	*routine(void *arg)
 int	mutex_initializer(pthread_mutex_t *fork_array, int num_phil)
 {
 	int	i;
-	int j;
 	
 	i = 0;
 	while (i < num_phil)
 	{
-		j = 0;
 		if (pthread_mutex_init(&fork_array[i], NULL) != 0) 
 		{
 			printf("Mutex initialization failed.\n");
 			destroyer(fork_array, i);
-			free_stuff(fork_array);
+			free_2d_array((void **)fork_array);
 			return (1);
 		}
 		i++;
@@ -78,7 +76,7 @@ int	main(int argc, char **argv)
 		printf("Memory allocation failed.\n");
 		return 1;
 	}
-	if (mutex_initializer(fork_array))
+	if (mutex_initializer(fork_array, philo_atoi(argv[1])))
 		return (1);
 	common_data = malloc(sizeof(t_common));
 	if (common_data == NULL) 
@@ -94,7 +92,7 @@ int	main(int argc, char **argv)
 		args = malloc(sizeof(t_args));
 		if (args == NULL)
 		{
-			free_stuff(args);
+			free_phil_index(args);
 			return (1);
 		}
 		args->common_data = common_data;
@@ -125,7 +123,7 @@ int	main(int argc, char **argv)
 		if (pthread_create(&philo[i], NULL, &routine, args) != 0)
 		{
 			//all previous threads must stop come back from routine and join to finish counting backward i--
-			free_stuff(args);
+			free_phil_index(args);
             printf("Failed to create thread");
             return (1);
 		}
@@ -162,6 +160,6 @@ int	main(int argc, char **argv)
 			break ;
 		}
 	}
-	free_stuff(args);
+	free_phil_index(args);
 	return (0);
 }

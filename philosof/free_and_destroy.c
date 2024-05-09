@@ -40,19 +40,19 @@ void	free_2d_array_i(void ***arr, int i)
 	*arr = NULL;
 }
 
-void    destroyer(t_args *args, int i)
+void    destroyer(pthread_mutex_t *fork_array, int i)
 {
     int j;
 
     j = 0;
     while (j < i)
     {
-        pthread_mutex_destroy(&args->fork_array[j]);
+        pthread_mutex_destroy(&fork_array[j]);
         j++;
     }
 }
 
-void	free_stuff(t_args *args)
+void	free_phil_index(t_args *args)
 {
 	int	i;
 

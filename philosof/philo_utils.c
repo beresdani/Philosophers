@@ -27,6 +27,14 @@ long long	get_timestamp()
 	return (timestamp);
 }
 
+int	get_rel_time(long long start_time)
+{
+	int rel_timestamp;
+
+	rel_timestamp = get_timestamp() - start_time;
+	return (rel_timestamp);
+}
+
 int	philo_atoi(char	*str)
 {
 	int	result;
