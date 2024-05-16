@@ -12,24 +12,23 @@
 
 #include "philo.h"
 
-long long	get_timestamp()
+long long	get_timestamp(void)
 {
 	long long		timestamp_1;
 	long long		timestamp_2;
 	long long		timestamp;
+	struct timeval	tv;
 
-	struct timeval tv;
-    gettimeofday(&tv, NULL); // Get current time
-
-	timestamp_1 = tv.tv_usec/1000;
-	timestamp_2 = tv.tv_sec*1000;
+	gettimeofday(&tv, NULL);
+	timestamp_1 = tv.tv_usec / 1000;
+	timestamp_2 = tv.tv_sec * 1000;
 	timestamp = timestamp_2 + timestamp_1;
 	return (timestamp);
 }
 
 int	get_rel_time(long long start_time)
 {
-	int rel_timestamp;
+	int	rel_timestamp;
 
 	rel_timestamp = get_timestamp() - start_time;
 	return (rel_timestamp);
@@ -43,7 +42,7 @@ int	philo_atoi(char	*str)
 
 	i = 0;
 	result = 0;
-	while(str[i])
+	while (str[i])
 	{
 		digit = str[i] - 48;
 		result = result * 10 + digit;

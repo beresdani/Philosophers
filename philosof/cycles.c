@@ -23,12 +23,12 @@ int	check_death(t_args *args, int index)
 		pthread_mutex_unlock(&args->mutex);
 		return (1);
 	}
-	return (0);	
+	return (0);
 }
 
 int	time_till_death(t_args *args)
 {
-	int since_fed;
+	int	since_fed;
 
 	since_fed = get_timestamp() - args->last_fed;
 	if (since_fed < args->time_to_die)
@@ -47,7 +47,7 @@ void	sleep_cycle(t_args *args, int index)
 		usleep(time_till_death(args) * 1000);
 		return ;
 	}
-	usleep(args->time_sleep * 1000);	
+	usleep(args->time_sleep * 1000);
 }
 
 void	think_cycle(t_args *args, int index)
@@ -55,7 +55,7 @@ void	think_cycle(t_args *args, int index)
 	pthread_mutex_lock(&args->mutex);
 	printf("%lld %d is thinking\n", get_timestamp(), index);
 	pthread_mutex_unlock(&args->mutex);
-	usleep(args->time_sleep *1000);
+	usleep(args->time_sleep * 1000);
 }
 
 int	check_end(t_args *args, int num_eats)
