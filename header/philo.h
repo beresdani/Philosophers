@@ -53,6 +53,7 @@ void		*routine(void *arg);
 int			run_threads(t_args *args);
 int			check_death(t_args *args, int index);
 int         check_end(t_args *args, int num_eats);
+int         time_till_death(t_args *args);
 void		print_fork_array(t_args *args);
 void		sleep_cycle(t_args *args, int index);
 void		think_cycle(t_args *args, int index);

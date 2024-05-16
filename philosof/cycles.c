@@ -26,11 +26,27 @@ int	check_death(t_args *args, int index)
 	return (0);	
 }
 
+int	time_till_death(t_args *args)
+{
+	int since_fed;
+
+	since_fed = get_timestamp() - args->last_fed;
+	if (since_fed < args->time_to_die)
+		return (args->time_to_die - since_fed);
+	else
+		return (0);
+}
+
 void	sleep_cycle(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->mutex);
 	printf("%lld %d is sleeping\n", get_timestamp(), index);
 	pthread_mutex_unlock(&args->mutex);
+	if (time_till_death(args) < args->time_sleep)
+	{
+		usleep(time_till_death(args) * 1000);
+		return ;
+	}
 	usleep(args->time_sleep * 1000);	
 }
 
