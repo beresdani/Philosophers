@@ -54,8 +54,8 @@ void    destroyer(pthread_mutex_t *fork_array, int i)
 
 void	free_phil_index(t_args *args)
 {
-	int	i;
+	//int	i;
 
-	i = 0;
+	//i = 0;
 	free(args->phil_index);
 }

@@ -54,7 +54,9 @@ int	last_phil_loop(t_args *args, int index)
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		think_cycle(args, index);
+		//think_cycle(args, index);
+		printf("%lld %d is thinking\n", get_timestamp(), index);
+		//usleep(args->time_eat *1000);
 		if (check_death(args, index) || args->death)
 			return (1);
 		if (args->num_phil != 1)
@@ -116,7 +118,9 @@ int	odd_loop(t_args *args, int index)
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		think_cycle(args, index);
+		//think_cycle(args, index);
+		printf("%lld %d is thinking\n", get_timestamp(), index);
+		//usleep(args->time_eat *1000);
 		if (check_death(args, index) || args->death)
 			return (1);
 		num_eats++;

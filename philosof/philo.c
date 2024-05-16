@@ -137,9 +137,9 @@ int	main(int argc, char **argv)
 			pthread_mutex_lock(&args->mutex); // Lock the mutex before canceling threads
 			while (i < philo_atoi(argv[1]))
 			{
-				pthread_mutex_unlock(&args->mutex); // Unlock the mutex before canceling the thread
+				//pthread_mutex_unlock(&args->mutex); // Unlock the mutex before canceling the thread
 				pthread_join(philo[i], NULL); // Wait for the thread to exit
-				pthread_mutex_lock(&args->mutex); // Lock the mutex after joining the thread
+				//pthread_mutex_lock(&args->mutex); // Lock the mutex after joining the thread
 				i++;
 			}
 			printf("%lld %d died\n", get_timestamp(), args->common_data->dead_philo);
@@ -151,9 +151,9 @@ int	main(int argc, char **argv)
 		{
 			while (i < philo_atoi(argv[1]))
 			{
-				pthread_mutex_unlock(&args->mutex); // Unlock the mutex before canceling the thread
+				//pthread_mutex_unlock(&args->mutex); // Unlock the mutex before canceling the thread
 				pthread_join(philo[i], NULL); // Wait for the thread to exit
-				pthread_mutex_lock(&args->mutex); // Lock the mutex after joining the thread
+				//pthread_mutex_lock(&args->mutex); // Lock the mutex after joining the thread
 				i++;
 			}
 			pthread_mutex_destroy(&args->mutex);
