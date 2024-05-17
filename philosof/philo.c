@@ -65,7 +65,7 @@ int	main(int argc, char **argv)
 	t_common		*common_data;
 	pthread_mutex_t	*fork_array;
 
-	if (check_input(argc))
+	if (check_input(argc, argv))
 		return (1);
 	fork_array = create_fork_array(argv);
 	if (fork_array == NULL)
@@ -98,12 +98,24 @@ pthread_mutex_t	*create_fork_array(char **argv)
 	return (fork_array);
 }
 
-int	check_input(int argc)
+int	check_input(int argc, char **argv)
 {
+	int i;
+
 	if (argc < 5 || argc > 6)
 	{
 		printf("Wrong input\n");
 		return (1);
 	}
+	i = 0;
+	while (i < argc - 1)
+	{
+		if (philo_atoi(argv[i + 1]) < 1)
+		{
+			printf("Wrong input\n");
+			return (1);
+		}
+		i++;
+	} 
 	return (0);
 }

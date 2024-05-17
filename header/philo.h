@@ -91,7 +91,7 @@ int					check_args(t_args *args);
 int					check_fork_array(pthread_mutex_t *fork_array);
 int					check_common_data(t_common *common_data,
 						pthread_mutex_t *fork_array);
-int					check_input(int argc);
+int					check_input(int argc, char **argv);
 int					init_mutex(t_args *args);
 int					looper_args(t_args *args, char **argv,
 						t_common *common_data, pthread_mutex_t	*fork_array);
