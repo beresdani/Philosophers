@@ -17,12 +17,15 @@ int	try_to_eat_last(t_args *args, int index)
 	pthread_mutex_lock(&args->fork_array[index - 1]);
 	pthread_mutex_lock(&args->fork_array[0]);
 	pthread_mutex_lock(&args->mutex);
-	printf("%lld %d has taken a fork\n", get_timestamp(), index);
-	printf("%lld %d has taken a fork\n", get_timestamp(), index);
-	printf("%lld %d is eating\n", get_timestamp(), index);
+	printf("%lld %d has taken a fork\n", get_timestamp(args), index);
+	printf("%lld %d has taken a fork\n", get_timestamp(args), index);
+	printf("%lld %d is eating\n", get_timestamp(args), index);
 	pthread_mutex_unlock(&args->mutex);
-	args->last_fed = get_timestamp();
-	usleep(args->time_eat * 1000);
+	args->last_fed = get_timestamp(args);
+	if (time_till_death(args) < args->time_eat)
+		usleep(time_till_death(args) * 1000);
+	else
+		usleep(args->time_eat * 1000);
 	pthread_mutex_unlock(&args->fork_array[0]);
 	pthread_mutex_unlock(&args->fork_array[index - 1]);
 	return (0);
@@ -30,15 +33,29 @@ int	try_to_eat_last(t_args *args, int index)
 
 int	try_to_eat(t_args *args, int index)
 {
+	int	time_eat;
+
+	pthread_mutex_lock(&args->mutex);
+	time_eat = args->time_eat;
+	pthread_mutex_unlock(&args->mutex);
 	pthread_mutex_lock(&args->fork_array[index - 1]);
 	pthread_mutex_lock(&args->fork_array[index]);
-	pthread_mutex_lock(&args->mutex);
-	printf("%lld %d has taken a fork\n", get_timestamp(), index);
-	printf("%lld %d has taken a fork\n", get_timestamp(), index);
-	printf("%lld %d is eating\n", get_timestamp(), index);
-	pthread_mutex_unlock(&args->mutex);
-	args->last_fed = get_timestamp();
-	usleep(args->time_eat * 1000);
+	//printf("%d check\n", index);
+	pthread_mutex_lock(&args->print_mutex);
+	printf("%lld %d has taken a fork\n", get_timestamp(args), index);
+	printf("%lld %d has taken a fork\n", get_timestamp(args), index);
+	printf("%lld %d is eating\n", get_timestamp(args), index);
+	args->last_fed = get_timestamp(args);
+	pthread_mutex_unlock(&args->print_mutex);
+	if (time_till_death(args) < time_eat)
+	{
+		//printf("%d check1\n", index);
+		usleep(time_till_death(args) * 1000);
+	}
+	else
+	{
+		usleep(time_eat * 1000);
+	}
 	pthread_mutex_unlock(&args->fork_array[index]);
 	pthread_mutex_unlock(&args->fork_array[index - 1]);
 	return (0);
@@ -55,7 +72,7 @@ int	last_phil_loop(t_args *args, int index)
 		if (check_death(args, index) || args->death)
 			return (1);
 		pthread_mutex_lock(&args->mutex);
-		printf("%lld %d is thinking\n", get_timestamp(), index);
+		printf("%lld %d is thinking\n", get_timestamp(args), index);
 		pthread_mutex_unlock(&args->mutex);
 		usleep(args->time_eat * 10);
 		if (check_death(args, index) || args->death)
@@ -79,9 +96,9 @@ int	even_loop(t_args *args, int index)
 	{
 		if (check_death(args, index) || args->death)
 			return (1);
-		pthread_mutex_lock(&args->mutex);
-		printf("%lld %d is thinking\n", get_timestamp(), index);
-		pthread_mutex_unlock(&args->mutex);
+		pthread_mutex_lock(&args->print_mutex);
+		printf("%lld %d is thinking\n", get_timestamp(args), index);
+		pthread_mutex_unlock(&args->print_mutex);
 		usleep(args->time_eat * 10);
 		try_to_eat(args, index);
 		if (check_end(args, num_eats))
@@ -110,9 +127,9 @@ int	odd_loop(t_args *args, int index)
 		sleep_cycle(args, index);
 		if (check_death(args, index) || args->death)
 			return (1);
-		pthread_mutex_lock(&args->mutex);
-		printf("%lld %d is thinking\n", get_timestamp(), index);
-		pthread_mutex_unlock(&args->mutex);
+		pthread_mutex_lock(&args->print_mutex);
+		printf("%lld %d is thinking\n", get_timestamp(args), index);
+		pthread_mutex_unlock(&args->print_mutex);
 		usleep(args->time_eat * 10);
 		if (check_death(args, index) || args->death)
 			return (1);

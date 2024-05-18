@@ -31,6 +31,7 @@
 typedef struct s_args
 {
 	pthread_mutex_t	mutex;
+	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	*fork_array;
 	int				num_phil;
 	long long		time_sleep;
@@ -55,7 +56,7 @@ typedef struct s_common
  * 	FUNCTION PROTOTYPES
  *********************************/
 
-long long			get_timestamp(void);
+long long			get_timestamp(t_args *args);
 int					get_rel_time(long long start_time);
 int					philo_atoi(char	*str);
 void				put_str(char *str);
