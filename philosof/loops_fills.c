@@ -26,7 +26,6 @@ void	fill_endparams(t_args *args, char **argv)
 	if (argv[5])
 	{
 		args->is_end = 1;
-		args->ended = 0;
 		args->num_rounds = philo_atoi(argv[5]);
 	}
 }
@@ -40,6 +39,7 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 	args->time_eat = philo_atoi(argv[3]);
 	args->time_sleep = philo_atoi(argv[4]);
 	args->is_end = 0;
+	args->ended = 0;
 	args->death = 0;
 	args->fork_array = fork_array;
 }
@@ -47,7 +47,7 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 int	fill_times(t_args *args, int i)
 {
 	args->start_time = get_timestamp();
-	args->last_fed = get_timestamp();
+	args->last_fed = get_rel_time(args->start_time);
 	args->phil_index = malloc(sizeof(int));
 	if (args->phil_index == NULL)
 		return (1);

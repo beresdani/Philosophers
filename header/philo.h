@@ -81,6 +81,8 @@ void				free_phil_index(t_args *args);
 void				destroyer(pthread_mutex_t *fork_array, int i);
 void				free_2d_array_i(void ***arr, int i);
 void				free_2d_array(void **ptr);
+void				free_args(t_args *args);
+void				free_threads(pthread_t *philo, int num_phil);
 void				fill_args(t_args *args, char **argv, t_common *common_data,
 						pthread_mutex_t *fork_array);
 void				fill_endparams(t_args *args, char **argv);

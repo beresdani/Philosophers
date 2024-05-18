@@ -26,7 +26,6 @@ int	check_args(t_args *args)
 {
 	if (args == NULL)
 	{
-		free_phil_index(args);
 		return (1);
 	}
 	return (0);
@@ -36,7 +35,8 @@ int	create_threads(t_args *args, pthread_t *philo, int i)
 {
 	if (pthread_create(&philo[i], NULL, &routine, args) != 0)
 	{
-		free_phil_index(args);
+		free_threads(philo, i);
+		free_args(args);
 		printf("Failed to create thread");
 		return (1);
 	}

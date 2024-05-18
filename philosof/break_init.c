@@ -37,7 +37,7 @@ void	break_death(t_args *args, pthread_t *philo)
 		i++;
 	}
 	pthread_mutex_lock(&args->mutex);
-	printf("%lld %d died\n", get_timestamp(),
+	printf("%d %d died\n", get_rel_time(args->start_time),
 		args->common_data->dead_philo);
 	pthread_mutex_unlock(&args->mutex);
 	pthread_mutex_destroy(&args->mutex);

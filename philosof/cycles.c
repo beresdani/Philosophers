@@ -19,7 +19,7 @@ int	check_death(t_args *args, int index)
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	dead_philo = args->common_data->dead_philo;
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
-	if ((get_timestamp() - args->last_fed) >= args->time_to_die)
+	if ((get_rel_time(args->start_time) - args->last_fed) >= args->time_to_die)
 	{
 		pthread_mutex_lock(&args->mutex);
 		args->death = 1;
@@ -39,7 +39,7 @@ int	time_till_death(t_args *args)
 {
 	int	since_fed;
 
-	since_fed = get_timestamp() - args->last_fed;
+	since_fed = get_rel_time(args->start_time) - args->last_fed;
 	if (since_fed < args->time_to_die)
 		return (args->time_to_die - since_fed);
 	else
@@ -49,7 +49,7 @@ int	time_till_death(t_args *args)
 void	sleep_cycle(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%lld %d is sleeping\n", get_timestamp(), index);
+	printf("%d %d is sleeping\n", get_rel_time(args->start_time), index);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
 	if (time_till_death(args) < args->time_sleep)
 	{
@@ -62,7 +62,7 @@ void	sleep_cycle(t_args *args, int index)
 void	think_cycle(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%lld %d is thinking\n", get_timestamp(), index);
+	printf("%d %d is thinking\n", get_rel_time(args->start_time), index);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
 	usleep(args->time_sleep * 1000);
 }
