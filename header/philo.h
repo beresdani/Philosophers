@@ -86,7 +86,7 @@ void				fill_endparams(t_args *args, char **argv);
 int					fill_times(t_args *args, int i);
 void				break_death(t_args *args, pthread_t *philo);
 void				break_ended(t_args *args, pthread_t *philo);
-void				check_join(t_args *args, pthread_t *philo);
+int					check_join(t_args *args, pthread_t *philo);
 int					create_threads(t_args *args, pthread_t *philo, int i);
 int					check_args(t_args *args);
 int					check_fork_array(pthread_mutex_t *fork_array);

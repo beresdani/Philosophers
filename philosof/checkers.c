@@ -43,25 +43,17 @@ int	create_threads(t_args *args, pthread_t *philo, int i)
 	return (0);
 }
 
-void	check_join(t_args *args, pthread_t *philo)
+int	check_join(t_args *args, pthread_t *philo)
 {
-	while (1)
+	if (args->death)
 	{
-		pthread_mutex_lock(&args->mutex);
-		if (args->death)
-		{
-			pthread_mutex_unlock(&args->mutex);
-			break_death(args, philo);
-			break ;
-		}
-		pthread_mutex_unlock(&args->mutex);
-		pthread_mutex_lock(&args->mutex);
-		if (args->ended)
-		{
-			pthread_mutex_unlock(&args->mutex);
-			break_ended(args, philo);
-			break ;
-		}
-		pthread_mutex_unlock(&args->mutex);
+		break_death(args, philo);
+		return (1);
 	}
+	if (args->ended)
+	{
+		break_ended(args, philo);
+		return (1);
+	}
+	return (0);
 }

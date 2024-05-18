@@ -82,8 +82,13 @@ int	main(int argc, char **argv)
 			return (1);
 		i++;
 	}
-	check_join(args, philo);
-	return (free_phil_index(args), 0);
+	while (1)
+	{
+		if (check_join(args, philo))
+			break ;
+	}
+	free_phil_index(args);
+	return (0);
 }
 
 pthread_mutex_t	*create_fork_array(char **argv)
