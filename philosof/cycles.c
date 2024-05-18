@@ -19,11 +19,12 @@ int	check_death(t_args *args, int index)
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	dead_philo = args->common_data->dead_philo;
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+	//printf("check");
 	if ((get_rel_time(args->start_time) - args->last_fed) >= args->time_to_die)
 	{
-		pthread_mutex_lock(&args->mutex);
-		args->death = 1;
-		pthread_mutex_unlock(&args->mutex);
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		args->common_data->death = 1;
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 		if (dead_philo == -1)
 		{
 			pthread_mutex_lock(&args->common_data->deadphil_mutex);
@@ -51,12 +52,12 @@ void	sleep_cycle(t_args *args, int index)
 	pthread_mutex_lock(&args->common_data->print_mutex);
 	printf("%d %d is sleeping\n", get_rel_time(args->start_time), index);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
-	if (time_till_death(args) < args->time_sleep)
+	/*if (time_till_death(args) < args->time_sleep)
 	{
 		usleep(time_till_death(args) * 1000);
 		return ;
-	}
-	usleep(args->time_sleep * 1000);
+	}*/
+	ft_usleep_sleep(args, index);
 }
 
 void	think_cycle(t_args *args, int index)

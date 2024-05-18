@@ -40,7 +40,6 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 	args->time_sleep = philo_atoi(argv[4]);
 	args->is_end = 0;
 	args->ended = 0;
-	args->death = 0;
 	args->fork_array = fork_array;
 }
 

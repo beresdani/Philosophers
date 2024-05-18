@@ -63,15 +63,55 @@ void	put_str(char *str)
 	}
 }
 
-/*
-void print_fork_array(t_args *args)
+void	ft_usleep_eat(t_args *args, int index)
 {
-	int i;
+	long long	start_time;
+	int			last_fed;
+	int			time_eat;
+	int			dead_philo;
 
-	i = 0;
-	while (i < args->num_phil)
+	pthread_mutex_lock(&args->mutex);
+	start_time = args->start_time;
+	last_fed = args->last_fed;
+	time_eat = args->time_eat;
+	pthread_mutex_unlock(&args->mutex);
+	while (get_rel_time(start_time) - last_fed < time_eat)
 	{
-		printf("%d\n", args->fork_array[i]);
-		i++;
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		dead_philo = args->common_data->death;
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		usleep(200);
+		if (dead_philo == 1 || check_death(args, index))
+		{
+			//printf("eat check %d\n", index);
+			break ;
+		}
 	}
-}*/
+}
+
+void	ft_usleep_sleep(t_args *args, int index)
+{
+	long long	start_time;
+	int			sleep_start;
+	int			time_sleep;
+	//int			dead_philo;
+
+	pthread_mutex_lock(&args->mutex);
+	start_time = args->start_time;
+	sleep_start = get_rel_time(start_time);
+	time_sleep = args->time_sleep;
+	pthread_mutex_unlock(&args->mutex);
+	while (get_rel_time(start_time) - sleep_start < time_sleep)
+	{
+		/*pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		dead_philo = args->common_data->death;
+		//printf("dead philo %d\n", dead_philo);
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);*/
+		usleep(200);
+		if (args->common_data->death == 1 || check_death(args, index))
+		{
+			//printf("sleep check %d %d\n", index, args->death);
+			break ;
+		}
+	}
+}

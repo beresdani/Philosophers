@@ -87,8 +87,8 @@ int	main(int argc, char **argv)
 		if (check_join(args, philo))
 			break ;
 	}
-	free_threads(philo, args->num_phil);
-	free_args(args);
+	//free_threads(philo, args->num_phil);
+	//free_args(args);
 	return (0);
 }
 

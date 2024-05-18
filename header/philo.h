@@ -42,12 +42,12 @@ typedef struct s_args
 	int				is_end;
 	int				ended;
 	int				*phil_index;
-	int				death;
 	struct s_common	*common_data;
 }	t_args;
 
 typedef struct s_common
 {
+	int				death;
 	int				dead_philo;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	deadphil_mutex;
@@ -101,4 +101,7 @@ int					looper_args(t_args *args, char **argv,
 						t_common *common_data, pthread_mutex_t	*fork_array);
 int					looper_threads(t_args *args, pthread_t *philo, int i);
 pthread_mutex_t		*create_fork_array(char **argv);
+void				ft_usleep_eat(t_args *args, int index);
+void				ft_usleep_sleep(t_args *args, int index);
+
 #endif
