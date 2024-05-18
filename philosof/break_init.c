@@ -7,7 +7,12 @@ int	init_mutex(t_args *args)
 		printf("Mutex initialization failed.\n");
 		return (1);
 	}
-	if (pthread_mutex_init(&args->print_mutex, NULL) != 0)
+	if (pthread_mutex_init(&args->common_data->print_mutex, NULL) != 0)
+	{
+		printf("Mutex initialization failed.\n");
+		return (1);
+	}
+	if (pthread_mutex_init(&args->common_data->deadphil_mutex, NULL) != 0)
 	{
 		printf("Mutex initialization failed.\n");
 		return (1);
@@ -32,7 +37,7 @@ void	break_death(t_args *args, pthread_t *philo)
 		i++;
 	}
 	pthread_mutex_lock(&args->mutex);
-	printf("%lld %d died\n", get_timestamp(args),
+	printf("%lld %d died\n", get_timestamp(),
 		args->common_data->dead_philo);
 	pthread_mutex_unlock(&args->mutex);
 	pthread_mutex_destroy(&args->mutex);

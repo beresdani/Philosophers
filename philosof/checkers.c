@@ -45,12 +45,22 @@ int	create_threads(t_args *args, pthread_t *philo, int i)
 
 int	check_join(t_args *args, pthread_t *philo)
 {
-	if (args->death)
+	int	death;
+	int ended;
+
+	pthread_mutex_lock(&args->mutex);
+	death = args->death;
+	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_lock(&args->mutex);
+	ended = args->ended;
+	pthread_mutex_unlock(&args->mutex);
+	usleep(100);
+	if (death)
 	{
 		break_death(args, philo);
 		return (1);
 	}
-	if (args->ended)
+	if (ended)
 	{
 		break_ended(args, philo);
 		return (1);

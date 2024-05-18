@@ -87,6 +87,7 @@ int	main(int argc, char **argv)
 		if (check_join(args, philo))
 			break ;
 	}
+	
 	free_phil_index(args);
 	return (0);
 }

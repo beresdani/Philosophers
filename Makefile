@@ -21,7 +21,7 @@ OPT=#-O0
 DEPFLAGS=-MP -MD
 
 # flags that are specific to this project
-EXTRAFLAGS=-pthread 
+EXTRAFLAGS=-pthread #-fsanitize=thread
 
 # automatically add the -I onto each include directory
 CFLAGS=-Wall -Wextra -Werror -g $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)

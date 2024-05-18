@@ -12,16 +12,14 @@
 
 #include "philo.h"
 
-long long	get_timestamp(t_args *args)
+long long	get_timestamp(void)
 {
 	long long		timestamp_1;
 	long long		timestamp_2;
 	long long		timestamp;
 	struct timeval	tv;
 
-	pthread_mutex_lock(&args->mutex);
 	gettimeofday(&tv, NULL);
-	pthread_mutex_unlock(&args->mutex);
 	timestamp_1 = tv.tv_usec / 1000;
 	timestamp_2 = tv.tv_sec * 1000;
 	timestamp = timestamp_2 + timestamp_1;
