@@ -63,7 +63,7 @@ void	put_str(char *str)
 	}
 }
 
-void	ft_usleep_eat(t_args *args, int index)
+int	ft_usleep_eat(t_args *args, int index)
 {
 	long long	start_time;
 	int			last_fed;
@@ -71,7 +71,7 @@ void	ft_usleep_eat(t_args *args, int index)
 	int			dead_philo;
 
 	pthread_mutex_lock(&args->mutex);
-	start_time = args->start_time;
+	start_time = args->common_data->start_time;
 	last_fed = args->last_fed;
 	time_eat = args->time_eat;
 	pthread_mutex_unlock(&args->mutex);
@@ -84,12 +84,13 @@ void	ft_usleep_eat(t_args *args, int index)
 		if (dead_philo == 1 || check_death(args, index))
 		{
 			//printf("eat check %d\n", index);
-			break ;
+			return (1);
 		}
 	}
+	return (0);
 }
 
-void	ft_usleep_sleep(t_args *args, int index)
+int	ft_usleep_sleep(t_args *args, int index)
 {
 	long long	start_time;
 	int			sleep_start;
@@ -97,7 +98,7 @@ void	ft_usleep_sleep(t_args *args, int index)
 	//int			dead_philo;
 
 	pthread_mutex_lock(&args->mutex);
-	start_time = args->start_time;
+	start_time = args->common_data->start_time;
 	sleep_start = get_rel_time(start_time);
 	time_sleep = args->time_sleep;
 	pthread_mutex_unlock(&args->mutex);
@@ -111,7 +112,8 @@ void	ft_usleep_sleep(t_args *args, int index)
 		if (args->common_data->death == 1 || check_death(args, index))
 		{
 			//printf("sleep check %d %d\n", index, args->death);
-			break ;
+			return (1);
 		}
 	}
+	return (0);
 }

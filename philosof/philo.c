@@ -35,6 +35,11 @@ void	*routine(void *arg)
 		else
 			even_loop(args, index);
 	}
+	if (args->phil_index != NULL) 
+	{
+        free(args->phil_index);
+        args->phil_index = NULL;
+    }
 	return (NULL);
 }
 
@@ -74,6 +79,7 @@ int	main(int argc, char **argv)
 	if (check_common_data(common_data, fork_array))
 		return (1);
 	i = 0;
+	common_data->start_time = get_timestamp();
 	while (i < philo_atoi(argv[1]))
 	{
 		args = malloc(sizeof(t_args));
@@ -88,7 +94,7 @@ int	main(int argc, char **argv)
 			break ;
 	}
 	//free_threads(philo, args->num_phil);
-	//free_args(args);
+	free_args(args);
 	return (0);
 }
 
@@ -106,6 +112,31 @@ pthread_mutex_t	*create_fork_array(char **argv)
 	return (fork_array);
 }
 
+int	create_threads(t_args *args, pthread_t *philo, int i)
+{
+	if (pthread_create(&philo[i], NULL, &routine, args) != 0)
+	{
+		free_args(args);
+		printf("Failed to create thread");
+		return (1);
+	}
+	return (0);
+}
+
+int	check_non_num(char *value)
+{
+	int i;
+
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] < 48 || value[i] > 57)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	check_input(int argc, char **argv)
 {
 	int i;
@@ -118,7 +149,7 @@ int	check_input(int argc, char **argv)
 	i = 0;
 	while (i < argc - 1)
 	{
-		if (philo_atoi(argv[i + 1]) < 1)
+		if (philo_atoi(argv[i + 1]) < 1 || check_non_num(argv[i + 1]))
 		{
 			printf("Wrong input\n");
 			return (1);

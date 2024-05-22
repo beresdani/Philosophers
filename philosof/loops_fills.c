@@ -45,8 +45,7 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 
 int	fill_times(t_args *args, int i)
 {
-	args->start_time = get_timestamp();
-	args->last_fed = get_rel_time(args->start_time);
+	args->last_fed = get_rel_time(args->common_data->start_time);
 	args->phil_index = malloc(sizeof(int));
 	if (args->phil_index == NULL)
 		return (1);

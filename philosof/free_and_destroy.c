@@ -69,10 +69,6 @@ void free_args(t_args *args)
         }
         free(args->fork_array);
     }
-    if (args->phil_index != NULL)
-    {
-        free(args->phil_index);
-    }
     if (args->common_data != NULL)
     {
 		pthread_mutex_destroy(&args->common_data->print_mutex);
@@ -87,11 +83,13 @@ void free_threads(pthread_t *philo, int num_phil)
 	int i;
 
 	i = 0;
-    if (philo == NULL)
-        return;
-    while (i < num_phil)
+	if (philo == NULL)
+    	return ;
+    while (i <= num_phil)
     {
+		//printf("before: %d\n", i);
         pthread_join(philo[i], NULL);
+		//printf("after: %d\n", i);
 		i++;
     }
 }
