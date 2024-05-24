@@ -80,11 +80,17 @@ int	main(int argc, char **argv)
 		return (1);
 	i = 0;
 	common_data->start_time = get_timestamp();
+	args = malloc(sizeof(t_args)*philo_atoi(argv[1]));
+	if (args == NULL)
+	{
+		//fork array, free everything
+		free (common_data);
+		return (1);
+	}
 	while (i < philo_atoi(argv[1]))
 	{
-		args = malloc(sizeof(t_args));
-		if (looper_args(args, argv, common_data, fork_array)
-			|| looper_threads(args, philo, i))
+		if (looper_args(&args[i], argv, common_data, fork_array)
+			|| looper_threads(&args[i], philo, i))
 			return (1);
 		i++;
 	}

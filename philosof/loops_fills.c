@@ -3,8 +3,6 @@
 int	looper_args(t_args *args, char **argv, t_common *common_data,
 	pthread_mutex_t	*fork_array)
 {
-	if (check_args(args))
-		return (1);
 	fill_args(args, argv, common_data, fork_array);
 	if (init_mutex(args))
 		return (1);
@@ -39,7 +37,6 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 	args->time_eat = philo_atoi(argv[3]);
 	args->time_sleep = philo_atoi(argv[4]);
 	args->is_end = 0;
-	args->ended = 0;
 	args->fork_array = fork_array;
 }
 

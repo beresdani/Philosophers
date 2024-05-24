@@ -80,9 +80,9 @@ int	check_end(t_args *args, int num_eats)
 	pthread_mutex_unlock(&args->mutex);
 	if (is_end && num_eats == num_rounds - 1)
 	{
-		pthread_mutex_lock(&args->mutex);
-		args->ended = 1;
-		pthread_mutex_unlock(&args->mutex);
+		pthread_mutex_lock(&args->common_data->print_mutex);
+		args->common_data->ended = 1;
+		pthread_mutex_unlock(&args->common_data->print_mutex);
 		return (1);
 	}
 	return (0);

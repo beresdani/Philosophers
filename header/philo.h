@@ -39,13 +39,13 @@ typedef struct s_args
 	long long		last_fed;
 	int				num_rounds;
 	int				is_end;
-	int				ended;
 	int				*phil_index;
 	struct s_common	*common_data;
 }	t_args;
 
 typedef struct s_common
 {
+	int				ended;
 	int				death;
 	int				dead_philo;
 	long long		start_time;
