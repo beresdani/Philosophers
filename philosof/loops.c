@@ -25,10 +25,8 @@ int	try_to_eat_last(t_args *args, int index)
 	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
 	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
 	printf("%d %d is eating\n", get_rel_time(args->common_data->start_time), index);
-	pthread_mutex_unlock(&args->common_data->print_mutex);
-	pthread_mutex_lock(&args->mutex);
 	args->last_fed = get_rel_time(args->common_data->start_time);
-	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_unlock(&args->common_data->print_mutex);
 	if (time_till_death(args) < args->time_eat)
 		usleep(time_till_death(args) * 1000);
 	else
@@ -62,10 +60,8 @@ int	try_to_eat(t_args *args, int index)
 	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
 	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
 	printf("%d %d is eating\n", get_rel_time(args->common_data->start_time), index);
-	pthread_mutex_unlock(&args->common_data->print_mutex);
-	pthread_mutex_lock(&args->mutex);
 	args->last_fed = get_rel_time(args->common_data->start_time);
-	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_unlock(&args->common_data->print_mutex);
 	if (ft_usleep_eat(args, index))
 	{
 		if (index == args->num_phil)
@@ -114,6 +110,7 @@ int	last_phil_loop(t_args *args, int index)
 int	even_loop(t_args *args, int index)
 {
 	int	num_eats;
+	int	death_value;
 
 	num_eats = 0;
 	while (1)
@@ -125,7 +122,10 @@ int	even_loop(t_args *args, int index)
 		printf("%d %d is thinking\n", get_rel_time(args->common_data->start_time), index);
 		pthread_mutex_unlock(&args->common_data->print_mutex);
 		usleep(50);
-		if (args->common_data->death == 1 || check_death(args, index))
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		death_value = args->common_data->death;
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		if (death_value == 1 || check_death(args, index))
 			return (1);
 		if (try_to_eat(args, index))
 			return (1);

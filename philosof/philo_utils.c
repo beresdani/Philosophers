@@ -95,6 +95,7 @@ int	ft_usleep_sleep(t_args *args, int index)
 	long long	start_time;
 	int			sleep_start;
 	int			time_sleep;
+	int			death_value;
 	//int			dead_philo;
 
 	pthread_mutex_lock(&args->mutex);
@@ -102,6 +103,9 @@ int	ft_usleep_sleep(t_args *args, int index)
 	sleep_start = get_rel_time(start_time);
 	time_sleep = args->time_sleep;
 	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_lock(&args->common_data->deadphil_mutex);
+	death_value = args->common_data->death;
+	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 	while (get_rel_time(start_time) - sleep_start < time_sleep)
 	{
 		/*pthread_mutex_lock(&args->common_data->deadphil_mutex);
@@ -109,7 +113,7 @@ int	ft_usleep_sleep(t_args *args, int index)
 		//printf("dead philo %d\n", dead_philo);
 		pthread_mutex_unlock(&args->common_data->deadphil_mutex);*/
 		usleep(200);
-		if (args->common_data->death == 1 || check_death(args, index))
+		if (death_value == 1 || check_death(args, index))
 		{
 			//printf("sleep check %d %d\n", index, args->death);
 			return (1);
