@@ -22,6 +22,25 @@ int	init_mutex(t_args *args)
 	return (0);
 }
 
+int	mutex_initializer(pthread_mutex_t *fork_array, int num_phil)
+{
+	int	i;
+
+	i = 0;
+	while (i < num_phil)
+	{
+		if (pthread_mutex_init(&fork_array[i], NULL) != 0)
+		{
+			printf("Mutex initialization failed.\n");
+			destroyer(fork_array, i);
+			free_2d_array((void **)fork_array);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 void	break_death(t_args *args, pthread_t *philo)
 {
 	int	i;

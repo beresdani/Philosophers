@@ -33,6 +33,7 @@ int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array)
 	common_data->dead_philo = -1;
 	common_data->death = 0;
 	common_data->ended = 0;
+	common_data->start_time = get_timestamp();
 	return (0);
 }
 
@@ -49,7 +50,7 @@ int	check_fork_array(pthread_mutex_t *fork_array)
 int	check_join(t_args *args, pthread_t *philo)
 {
 	int	death;
-	int ended;
+	int	ended;
 
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	death = args->common_data->death;
@@ -71,12 +72,46 @@ int	check_join(t_args *args, pthread_t *philo)
 	return (0);
 }
 
-void	eat_printer(t_args *args, int index)
+int	check_death(t_args *args, int index)
 {
-	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
-	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
-	printf("%d %d is eating\n", get_rel_time(args->start_time), index);
-	args->last_fed = get_rel_time(args->start_time);
-	pthread_mutex_unlock(&args->common_data->print_mutex);
+	int	dead_philo;
+
+	pthread_mutex_lock(&args->common_data->deadphil_mutex);
+	dead_philo = args->common_data->dead_philo;
+	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+	if ((get_rel_time(args->start_time) - args->last_fed) >= args->time_to_die)
+	{
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		args->common_data->death = 1;
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		if (dead_philo == -1)
+		{
+			pthread_mutex_lock(&args->common_data->deadphil_mutex);
+			args->common_data->dead_philo = index;
+			pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		}
+		return (1);
+	}
+	return (0);
+}
+
+int	check_end(t_args *args, int num_eats)
+{
+	int	is_end;
+	int	num_rounds;
+
+	pthread_mutex_lock(&args->mutex);
+	is_end = args->is_end;
+	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_lock(&args->mutex);
+	num_rounds = args->num_rounds;
+	pthread_mutex_unlock(&args->mutex);
+	if (is_end && num_eats == num_rounds - 1)
+	{
+		pthread_mutex_lock(&args->common_data->print_mutex);
+		args->common_data->ended = 1;
+		pthread_mutex_unlock(&args->common_data->print_mutex);
+		return (1);
+	}
+	return (0);
 }

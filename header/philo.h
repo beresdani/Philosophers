@@ -93,7 +93,7 @@ void				break_death(t_args *args, pthread_t *philo);
 void				break_ended(t_args *args, pthread_t *philo);
 int					check_join(t_args *args, pthread_t *philo);
 int					create_threads(t_args *args, pthread_t *philo, int i);
-int					check_args(t_args *args);
+int					check_args(t_args *args, t_common *common_data);
 int					check_fork_array(pthread_mutex_t *fork_array);
 int					check_common_data(t_common *common_data,
 						pthread_mutex_t *fork_array);
@@ -106,5 +106,8 @@ pthread_mutex_t		*create_fork_array(char **argv);
 int					ft_usleep_eat(t_args *args, int index);
 int					ft_usleep_sleep(t_args *args, int index);
 void				eat_printer(t_args *args, int index);
+void				thread_join_loop(t_args *args, pthread_t *philo);
+int					check_mallocs(pthread_mutex_t	*fork_array,
+						t_common *common_data, t_args *args);
 
 #endif

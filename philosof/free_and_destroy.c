@@ -57,7 +57,6 @@ void	free_args(t_args *args)
 	i = 0;
 	if (args == NULL)
 		return ;
-	pthread_mutex_destroy(&args->mutex);
 	if (args->fork_array != NULL)
 	{
 		while (i < args->num_phil)
@@ -74,18 +73,4 @@ void	free_args(t_args *args)
 		free(args->common_data);
 	}
 	free(args);
-}
-
-void	free_threads(pthread_t *philo, int num_phil)
-{
-	int	i;
-
-	i = 0;
-	if (philo == NULL)
-		return ;
-	while (i <= num_phil)
-	{
-		pthread_join(philo[i], NULL);
-		i++;
-	}
 }
