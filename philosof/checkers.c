@@ -8,6 +8,16 @@ int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array)
 		free_2d_array((void **)fork_array);
 		return (1);
 	}
+	if (pthread_mutex_init(&common_data->print_mutex, NULL) != 0)
+	{
+		printf("Mutex initialization failed.\n");
+		return (1);
+	}
+	if (pthread_mutex_init(&common_data->deadphil_mutex, NULL) != 0)
+	{
+		printf("Mutex initialization failed.\n");
+		return (1);
+	}
 	common_data->dead_philo = -1;
 	common_data->death = 0;
 	common_data->ended = 0;
@@ -43,9 +53,9 @@ int	check_join(t_args *args, pthread_t *philo)
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	death = args->common_data->death;
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
-	pthread_mutex_lock(&args->mutex);
+	pthread_mutex_lock(&args->common_data->print_mutex);
 	ended = args->common_data->ended;
-	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_unlock(&args->common_data->print_mutex);
 	//usleep(100);
 	if (death)
 	{

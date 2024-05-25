@@ -37,6 +37,7 @@ typedef struct s_args
 	long long		time_eat;
 	long long		time_to_die;
 	long long		last_fed;
+	long long		start_time;
 	int				num_rounds;
 	int				is_end;
 	int				*phil_index;

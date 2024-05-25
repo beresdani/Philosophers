@@ -22,10 +22,10 @@ int	try_to_eat_last(t_args *args, int index)
 	}
 	pthread_mutex_lock(&args->fork_array[index - 1]);	
 	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
-	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
-	printf("%d %d is eating\n", get_rel_time(args->common_data->start_time), index);
-	args->last_fed = get_rel_time(args->common_data->start_time);
+	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
+	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
+	printf("%d %d is eating\n", get_rel_time(args->start_time), index);
+	args->last_fed = get_rel_time(args->start_time);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
 	if (time_till_death(args) < args->time_eat)
 		usleep(time_till_death(args) * 1000);
@@ -57,10 +57,10 @@ int	try_to_eat(t_args *args, int index)
 	else 
 		pthread_mutex_lock(&args->fork_array[index]);
 	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
-	printf("%d %d has taken a fork\n", get_rel_time(args->common_data->start_time), index);
-	printf("%d %d is eating\n", get_rel_time(args->common_data->start_time), index);
-	args->last_fed = get_rel_time(args->common_data->start_time);
+	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
+	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
+	printf("%d %d is eating\n", get_rel_time(args->start_time), index);
+	args->last_fed = get_rel_time(args->start_time);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
 	if (ft_usleep_eat(args, index))
 	{
@@ -90,7 +90,7 @@ int	last_phil_loop(t_args *args, int index)
 		/*if (check_death(args, index) || args->common_data->death)
 			return (1);*/
 		pthread_mutex_lock(&args->common_data->print_mutex);
-		printf("%d %d is thinking\n", get_rel_time(args->common_data->start_time), index);
+		printf("%d %d is thinking\n", get_rel_time(args->start_time), index);
 		pthread_mutex_unlock(&args->common_data->print_mutex);
 		usleep(args->time_eat * 10);
 		/*if (check_death(args, index) || args->common_data->death)
@@ -119,7 +119,7 @@ int	even_loop(t_args *args, int index)
 			return (1);
 		usleep(50);*/
 		pthread_mutex_lock(&args->common_data->print_mutex);
-		printf("%d %d is thinking\n", get_rel_time(args->common_data->start_time), index);
+		printf("%d %d is thinking\n", get_rel_time(args->start_time), index);
 		pthread_mutex_unlock(&args->common_data->print_mutex);
 		usleep(50);
 		pthread_mutex_lock(&args->common_data->deadphil_mutex);
@@ -157,7 +157,7 @@ int	odd_loop(t_args *args, int index)
 		/*if (check_death(args, index) || args->common_data->death)
 			return (1);*/
 		pthread_mutex_lock(&args->common_data->print_mutex);
-		printf("%d %d is thinking\n", get_rel_time(args->common_data->start_time), index);
+		printf("%d %d is thinking\n", get_rel_time(args->start_time), index);
 		pthread_mutex_unlock(&args->common_data->print_mutex);
 		usleep(50);
 		/*if (check_death(args, index) || args->common_data->death)

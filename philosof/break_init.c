@@ -7,16 +7,6 @@ int	init_mutex(t_args *args)
 		printf("Mutex initialization failed.\n");
 		return (1);
 	}
-	if (pthread_mutex_init(&args->common_data->print_mutex, NULL) != 0)
-	{
-		printf("Mutex initialization failed.\n");
-		return (1);
-	}
-	if (pthread_mutex_init(&args->common_data->deadphil_mutex, NULL) != 0)
-	{
-		printf("Mutex initialization failed.\n");
-		return (1);
-	}
 	return (0);
 }
 
