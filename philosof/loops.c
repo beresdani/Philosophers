@@ -20,23 +20,17 @@ int	try_to_eat_last(t_args *args, int index)
 		pthread_mutex_unlock(&args->fork_array[0]);
 		return (1);
 	}
-	pthread_mutex_lock(&args->fork_array[index - 1]);	
+	pthread_mutex_lock(&args->fork_array[index - 1]);
 	pthread_mutex_lock(&args->common_data->print_mutex);
 	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
 	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
 	printf("%d %d is eating\n", get_rel_time(args->start_time), index);
 	args->last_fed = get_rel_time(args->start_time);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
-	if (time_till_death(args) < args->time_eat)
-		usleep(time_till_death(args) * 1000);
-	else
 	if (ft_usleep_eat(args, index))
 	{
-		if (index == args->num_phil)
-			pthread_mutex_unlock(&args->fork_array[0]);
-		else 
-			pthread_mutex_unlock(&args->fork_array[index]);
 		pthread_mutex_unlock(&args->fork_array[index - 1]);
+		pthread_mutex_unlock(&args->fork_array[0]);
 		return (1);
 	}
 	pthread_mutex_unlock(&args->fork_array[index - 1]);
@@ -47,33 +41,23 @@ int	try_to_eat_last(t_args *args, int index)
 int	try_to_eat(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->fork_array[index - 1]);
-	/*if (args->common_data->death == 1 || check_death(args, index))
-	{
-		pthread_mutex_unlock(&args->fork_array[index - 1]);
-		return (1);
-	}*/
 	if (index == args->num_phil)
 		pthread_mutex_lock(&args->fork_array[0]);
-	else 
+	else
 		pthread_mutex_lock(&args->fork_array[index]);
-	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
-	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
-	printf("%d %d is eating\n", get_rel_time(args->start_time), index);
-	args->last_fed = get_rel_time(args->start_time);
-	pthread_mutex_unlock(&args->common_data->print_mutex);
+	eat_printer(args, index);
 	if (ft_usleep_eat(args, index))
 	{
 		if (index == args->num_phil)
 			pthread_mutex_unlock(&args->fork_array[0]);
-		else 
+		else
 			pthread_mutex_unlock(&args->fork_array[index]);
 		pthread_mutex_unlock(&args->fork_array[index - 1]);
 		return (1);
 	}
 	if (index == args->num_phil)
 		pthread_mutex_unlock(&args->fork_array[0]);
-	else 
+	else
 		pthread_mutex_unlock(&args->fork_array[index]);
 	pthread_mutex_unlock(&args->fork_array[index - 1]);
 	return (0);
@@ -101,8 +85,8 @@ int	last_phil_loop(t_args *args, int index)
 				return (1);
 		if (check_end(args, num_eats))
 			return (1);
-		/*if (check_death(args, index) || args->common_data->death)
-			return (1);*/
+		if (check_death(args, index) || args->common_data->death)
+			return (1);
 		num_eats++;
 	}
 }

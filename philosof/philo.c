@@ -35,11 +35,7 @@ void	*routine(void *arg)
 		else
 			even_loop(args, index);
 	}
-	if (args->phil_index != NULL) 
-	{
-        free(args->phil_index);
-        args->phil_index = NULL;
-    }
+	free_index(args);
 	return (NULL);
 }
 

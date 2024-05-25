@@ -51,11 +51,6 @@ void	sleep_cycle(t_args *args, int index)
 	pthread_mutex_lock(&args->common_data->print_mutex);
 	printf("%d %d is sleeping\n", get_rel_time(args->start_time), index);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
-	/*if (time_till_death(args) < args->time_sleep)
-	{
-		usleep(time_till_death(args) * 1000);
-		return ;
-	}*/
 	ft_usleep_sleep(args, index);
 }
 
@@ -70,7 +65,7 @@ void	think_cycle(t_args *args, int index)
 int	check_end(t_args *args, int num_eats)
 {
 	int	is_end;
-	int num_rounds;
+	int	num_rounds;
 
 	pthread_mutex_lock(&args->mutex);
 	is_end = args->is_end;

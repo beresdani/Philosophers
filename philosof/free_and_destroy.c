@@ -29,15 +29,13 @@ void	free_2d_array(void **ptr)
 	}
 }
 
-void	free_2d_array_i(void ***arr, int i)
+void	free_index(t_args *args)
 {
-	int	j;
-
-	j = 0;
-	while (j < i)
-		free((*arr)[j++]);
-	free(*arr);
-	*arr = NULL;
+	if (args->phil_index != NULL)
+	{
+		free(args->phil_index);
+		args->phil_index = NULL;
+	}
 }
 
 void	destroyer(pthread_mutex_t *fork_array, int i)
@@ -52,44 +50,42 @@ void	destroyer(pthread_mutex_t *fork_array, int i)
 	}
 }
 
-void free_args(t_args *args)
+void	free_args(t_args *args)
 {
 	int	i;
 
 	i = 0;
-    if (args == NULL)
-        return;
-    pthread_mutex_destroy(&args->mutex);
-    if (args->fork_array != NULL)
-    {
-        while (i < args->num_phil)
-        {
-            pthread_mutex_destroy(&args->fork_array[i]);
+	if (args == NULL)
+		return ;
+	pthread_mutex_destroy(&args->mutex);
+	if (args->fork_array != NULL)
+	{
+		while (i < args->num_phil)
+		{
+			pthread_mutex_destroy(&args->fork_array[i]);
 			i++;
-        }
-        free(args->fork_array);
-    }
-    if (args->common_data != NULL)
-    {
+		}
+		free(args->fork_array);
+	}
+	if (args->common_data != NULL)
+	{
 		pthread_mutex_destroy(&args->common_data->print_mutex);
 		pthread_mutex_destroy(&args->common_data->deadphil_mutex);
-        free(args->common_data);
-    }
-    free(args);
+		free(args->common_data);
+	}
+	free(args);
 }
 
-void free_threads(pthread_t *philo, int num_phil)
+void	free_threads(pthread_t *philo, int num_phil)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (philo == NULL)
-    	return ;
-    while (i <= num_phil)
-    {
-		//printf("before: %d\n", i);
-        pthread_join(philo[i], NULL);
-		//printf("after: %d\n", i);
+		return ;
+	while (i <= num_phil)
+	{
+		pthread_join(philo[i], NULL);
 		i++;
-    }
+	}
 }

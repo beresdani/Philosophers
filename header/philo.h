@@ -84,6 +84,7 @@ void				free_2d_array_i(void ***arr, int i);
 void				free_2d_array(void **ptr);
 void				free_args(t_args *args);
 void				free_threads(pthread_t *philo, int num_phil);
+void				free_index(t_args *args);
 void				fill_args(t_args *args, char **argv, t_common *common_data,
 						pthread_mutex_t *fork_array);
 void				fill_endparams(t_args *args, char **argv);
@@ -104,5 +105,6 @@ int					looper_threads(t_args *args, pthread_t *philo, int i);
 pthread_mutex_t		*create_fork_array(char **argv);
 int					ft_usleep_eat(t_args *args, int index);
 int					ft_usleep_sleep(t_args *args, int index);
+void				eat_printer(t_args *args, int index);
 
 #endif
