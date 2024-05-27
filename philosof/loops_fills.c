@@ -44,7 +44,6 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 	pthread_mutex_t *fork_array)
 {
 	args->common_data = common_data;
-	args->num_phil = philo_atoi(argv[1]);
 	args->time_to_die = philo_atoi(argv[2]);
 	args->time_eat = philo_atoi(argv[3]);
 	args->time_sleep = philo_atoi(argv[4]);

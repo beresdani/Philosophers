@@ -59,7 +59,7 @@ void	free_args(t_args *args)
 		return ;
 	if (args->fork_array != NULL)
 	{
-		while (i < args->num_phil)
+		while (i < args->common_data->num_phil)
 		{
 			pthread_mutex_destroy(&args->fork_array[i]);
 			i++;

@@ -31,14 +31,6 @@ void	sleep_cycle(t_args *args, int index)
 	ft_usleep_sleep(args, index);
 }
 
-void	think_cycle(t_args *args, int index)
-{
-	pthread_mutex_lock(&args->common_data->print_mutex);
-	printf("%d %d is thinking\n", get_rel_time(args->start_time), index);
-	pthread_mutex_unlock(&args->common_data->print_mutex);
-	usleep(args->time_sleep * 1000);
-}
-
 void	eat_printer(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->common_data->print_mutex);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sleep_lock.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dberes <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/27 11:47:59 by dberes            #+#    #+#             */
+/*   Updated: 2024/05/27 11:48:03 by dberes           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	ft_usleep_eat(t_args *args, int index)
@@ -10,6 +22,7 @@ int	ft_usleep_eat(t_args *args, int index)
 	last_fed = args->last_fed;
 	time_eat = args->time_eat;
 	pthread_mutex_unlock(&args->mutex);
+	//printf("index: %d, last fed: %d\n", index, last_fed);
 	while (get_rel_time(args->start_time) - last_fed < time_eat)
 	{
 		pthread_mutex_lock(&args->common_data->deadphil_mutex);
@@ -40,13 +53,27 @@ int	ft_usleep_sleep(t_args *args, int index)
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 	while (get_rel_time(args->start_time) - sleep_start < time_sleep)
 	{
-		/*pthread_mutex_lock(&args->common_data->deadphil_mutex);
-		dead_philo = args->common_data->death;
-		//printf("dead philo %d\n", dead_philo);
-		pthread_mutex_unlock(&args->common_data->deadphil_mutex);*/
 		usleep(200);
 		if (death_value == 1 || check_death(args, index))
 			return (1);
 	}
 	return (0);
+}
+
+int	monitor_death_end(t_args *args, t_common *common_data)
+{
+	int i;
+
+	i = 0;
+	while (1)
+	{
+		// usleep(100);
+		while(i < common_data->num_phil)
+		{
+			if (check_death(args, i + 1) || common_data->ended)
+				return (1);
+			i++;
+		}
+		i = 0;
+	}
 }

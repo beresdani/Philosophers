@@ -32,7 +32,6 @@ typedef struct s_args
 {
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	*fork_array;
-	int				num_phil;
 	long long		time_sleep;
 	long long		time_eat;
 	long long		time_to_die;
@@ -46,6 +45,7 @@ typedef struct s_args
 
 typedef struct s_common
 {
+	int				num_phil;
 	int				ended;
 	int				death;
 	int				dead_philo;
@@ -96,7 +96,7 @@ int					create_threads(t_args *args, pthread_t *philo, int i);
 int					check_args(t_args *args, t_common *common_data);
 int					check_fork_array(pthread_mutex_t *fork_array);
 int					check_common_data(t_common *common_data,
-						pthread_mutex_t *fork_array);
+						pthread_mutex_t *fork_array, int num_phil);
 int					check_input(int argc, char **argv);
 int					init_mutex(t_args *args);
 int					looper_args(t_args *args, char **argv,
@@ -108,6 +108,8 @@ int					ft_usleep_sleep(t_args *args, int index);
 void				eat_printer(t_args *args, int index);
 void				thread_join_loop(t_args *args, pthread_t *philo);
 int					check_mallocs(pthread_mutex_t	*fork_array,
-						t_common *common_data, t_args *args);
+						t_common *common_data, t_args *args, int num_phil);
+void				unlocker(t_args *args, int index);
+int					monitor_death_end(t_args *args, t_common *common_data);
 
 #endif

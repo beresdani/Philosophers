@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array)
+int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array, int num_phil)
 {
 	if (common_data == NULL)
 	{
@@ -30,6 +30,7 @@ int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array)
 		printf("Mutex initialization failed.\n");
 		return (1);
 	}
+	common_data->num_phil = num_phil;
 	common_data->dead_philo = -1;
 	common_data->death = 0;
 	common_data->ended = 0;
@@ -75,11 +76,15 @@ int	check_join(t_args *args, pthread_t *philo)
 int	check_death(t_args *args, int index)
 {
 	int	dead_philo;
+	int	last_fed;
 
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	dead_philo = args->common_data->dead_philo;
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
-	if ((get_rel_time(args->start_time) - args->last_fed) >= args->time_to_die)
+	pthread_mutex_lock(&args->mutex);
+	last_fed = args->last_fed;
+	pthread_mutex_unlock(&args->mutex);
+	if ((get_rel_time(args->start_time) - last_fed) >= args->time_to_die)
 	{
 		pthread_mutex_lock(&args->common_data->deadphil_mutex);
 		args->common_data->death = 1;

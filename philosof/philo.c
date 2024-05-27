@@ -19,7 +19,7 @@ void	*routine(void *arg)
 
 	args = (t_args *)arg;
 	index = *args->phil_index;
-	if (args->num_phil % 2 == 0)
+	if (args->common_data->num_phil % 2 == 0)
 	{
 		if (index % 2 == 1)
 			odd_loop(args, index);
@@ -28,7 +28,7 @@ void	*routine(void *arg)
 	}
 	else
 	{
-		if (index == args->num_phil)
+		if (index == args->common_data->num_phil)
 			last_phil_loop(args, index);
 		else if (index % 2 == 1)
 			odd_loop(args, index);
@@ -52,7 +52,7 @@ int	main(int argc, char **argv)
 	fork_array = create_fork_array(argv);
 	common_data = malloc(sizeof(t_common));
 	args = malloc(sizeof(t_args) * philo_atoi(argv[1]));
-	if (check_mallocs(fork_array, common_data, args))
+	if (check_mallocs(fork_array, common_data, args, philo_atoi(argv[1])))
 		return (1);
 	i = 0;
 	while (i < philo_atoi(argv[1]))
@@ -62,16 +62,17 @@ int	main(int argc, char **argv)
 			return (1);
 		i++;
 	}
+	monitor_death_end(args, common_data);
 	thread_join_loop(args, philo);
 	return (free_args(args), 0);
 }
 
 int	check_mallocs(pthread_mutex_t *fork_array,
-	t_common *common_data, t_args *args)
+	t_common *common_data, t_args *args, int num_phil)
 {
 	if (fork_array == NULL)
 		return (1);
-	if (check_common_data(common_data, fork_array))
+	if (check_common_data(common_data, fork_array, num_phil))
 		return (1);
 	if (check_args(args, common_data))
 		return (1);

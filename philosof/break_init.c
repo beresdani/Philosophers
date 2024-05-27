@@ -47,9 +47,9 @@ void	break_death(t_args *args, pthread_t *philo)
 	int	num_phil;
 
 	i = 0;
-	pthread_mutex_lock(&args->mutex);
-	num_phil = args->num_phil;
-	pthread_mutex_unlock(&args->mutex);
+	//pthread_mutex_lock(&args->common_data->print_mutex);
+	num_phil = args->common_data->num_phil;
+	//pthread_mutex_unlock(&args->common_data->print_mutex);
 	while (i < num_phil)
 	{
 		//pthread_mutex_unlock(&args->mutex);
@@ -57,10 +57,10 @@ void	break_death(t_args *args, pthread_t *philo)
 		//pthread_mutex_lock(&args->mutex);
 		i++;
 	}
-	pthread_mutex_lock(&args->mutex);
+	pthread_mutex_lock(&args->common_data->print_mutex);
 	printf("%d %d died\n", get_rel_time(args->common_data->start_time),
 		args->common_data->dead_philo);
-	pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_unlock(&args->common_data->print_mutex);
 	pthread_mutex_destroy(&args->mutex);
 }
 
@@ -70,9 +70,7 @@ void	break_ended(t_args *args, pthread_t *philo)
 	int	num_phil;
 
 	i = 0;
-	pthread_mutex_lock(&args->mutex);
-	num_phil = args->num_phil;
-	pthread_mutex_unlock(&args->mutex);
+	num_phil = args->common_data->num_phil;
 	while (i < num_phil)
 	{
 		//pthread_mutex_unlock(&args->mutex);
