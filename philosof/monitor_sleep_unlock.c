@@ -66,14 +66,16 @@ int	monitor_death_end(t_args *args, t_common *common_data)
 
 	i = 0;
 	while (1)
-	{
-		// usleep(100);
-		while(i < common_data->num_phil)
+    {
+        //usleep(1000); // Sleep for 1 millisecond to reduce CPU usage
+		if (check_death(&args[i], i + 1) || common_data->ended)
 		{
-			if (check_death(args, i + 1) || common_data->ended)
-				return (1);
-			i++;
+			return 1;
 		}
-		i = 0;
-	}
+		i++;
+		if (i >= common_data->num_phil)
+		{
+			i = 0;
+		}
+    }
 }

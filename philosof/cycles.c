@@ -37,6 +37,8 @@ void	eat_printer(t_args *args, int index)
 	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
 	printf("%d %d has taken a fork\n", get_rel_time(args->start_time), index);
 	printf("%d %d is eating\n", get_rel_time(args->start_time), index);
-	args->last_fed = get_rel_time(args->start_time);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
+	pthread_mutex_lock(&args->mutex);
+	args->last_fed = get_rel_time(args->start_time);
+	pthread_mutex_unlock(&args->mutex);
 }

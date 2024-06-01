@@ -89,12 +89,10 @@ int	check_death(t_args *args, int index)
 		pthread_mutex_lock(&args->common_data->deadphil_mutex);
 		args->common_data->death = 1;
 		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
 		if (dead_philo == -1)
-		{
-			pthread_mutex_lock(&args->common_data->deadphil_mutex);
 			args->common_data->dead_philo = index;
-			pthread_mutex_unlock(&args->common_data->deadphil_mutex);
-		}
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 		return (1);
 	}
 	return (0);

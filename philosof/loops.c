@@ -14,8 +14,13 @@
 
 int	try_to_eat_last(t_args *args, int index)
 {
+	int	death_value;
+
 	pthread_mutex_lock(&args->fork_array[0]);
-	if (args->common_data->death == 1 || check_death(args, index))
+	pthread_mutex_lock(&args->common_data->deadphil_mutex);
+	death_value = args->common_data->death;
+	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+	if (death_value == 1 || check_death(args, index))
 	{
 		pthread_mutex_unlock(&args->fork_array[0]);
 		return (1);
@@ -35,10 +40,15 @@ int	try_to_eat_last(t_args *args, int index)
 
 int	try_to_eat(t_args *args, int index)
 {
+	int	death_value;
+ 
 	pthread_mutex_lock(&args->fork_array[index - 1]);
-	if (args->common_data->death == 1 || check_death(args, index))
+	pthread_mutex_lock(&args->common_data->deadphil_mutex);
+	death_value = args->common_data->death;
+	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+	if (death_value == 1 || check_death(args, index))
 	{
-		pthread_mutex_unlock(&args->fork_array[0]);
+		pthread_mutex_unlock(&args->fork_array[index - 1]);
 		return (1);
 	}
 	if (index == args->common_data->num_phil)
@@ -93,7 +103,6 @@ int	last_phil_loop(t_args *args, int index)
 int	even_loop(t_args *args, int index)
 {
 	int	num_eats;
-	int	death_value;
 
 	num_eats = 0;
 	while (1)
@@ -105,10 +114,10 @@ int	even_loop(t_args *args, int index)
 		printf("%d %d is thinking\n", get_rel_time(args->start_time), index);
 		pthread_mutex_unlock(&args->common_data->print_mutex);
 		usleep(50);
-		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		/*pthread_mutex_lock(&args->common_data->deadphil_mutex);
 		death_value = args->common_data->death;
 		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
-		/*if (death_value == 1 || check_death(args, index))
+		if (death_value == 1 || check_death(args, index))
 			return (1);*/
 		if (try_to_eat(args, index))
 			return (1);
@@ -117,6 +126,7 @@ int	even_loop(t_args *args, int index)
 		/*if (check_death(args, index) || args->common_data->death)
 			return (1);*/
 		sleep_cycle(args, index);
+		//usleep(1000);
 		/*if (check_death(args, index) || args->common_data->death)
 			return (1);*/
 		num_eats++;
