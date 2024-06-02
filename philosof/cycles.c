@@ -23,12 +23,17 @@ int	time_till_death(t_args *args)
 		return (0);
 }
 
-void	sleep_cycle(t_args *args, int index)
+int	sleep_cycle(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->common_data->print_mutex);
 	printf("%d %d is sleeping\n", get_rel_time(args->start_time), index);
 	pthread_mutex_unlock(&args->common_data->print_mutex);
-	ft_usleep_sleep(args, index);
+	if (ft_usleep_sleep(args, index))
+	{
+		printf("%d check: %d\n", get_rel_time(args->start_time), index);
+		return (1);
+	}
+	return (0);
 }
 
 void	eat_printer(t_args *args, int index)

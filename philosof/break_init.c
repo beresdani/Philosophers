@@ -52,6 +52,7 @@ void	break_death(t_args *args, pthread_t *philo)
 	//pthread_mutex_unlock(&args->common_data->print_mutex);
 	while (i < num_phil)
 	{
+		printf("%d join: %d\n", get_rel_time(args->start_time), i + 1);
 		//pthread_mutex_unlock(&args->mutex);
 		pthread_join(philo[i], NULL);
 		//pthread_mutex_lock(&args->mutex);
@@ -72,6 +73,22 @@ void	break_ended(t_args *args, pthread_t *philo)
 	i = 0;
 	num_phil = args->common_data->num_phil;
 	while (i < num_phil)
+	{
+		//pthread_mutex_unlock(&args->mutex);
+		pthread_join(philo[i], NULL);
+		//pthread_mutex_lock(&args->mutex);
+		i++;
+	}
+	//pthread_mutex_unlock(&args->mutex);
+	pthread_mutex_destroy(&args->mutex);
+}
+
+void	break_fail(t_args *args, pthread_t *philo, int last)
+{
+	int	i;
+
+	i = 0;
+	while (i < last)
 	{
 		//pthread_mutex_unlock(&args->mutex);
 		pthread_join(philo[i], NULL);

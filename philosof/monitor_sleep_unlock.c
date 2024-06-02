@@ -16,20 +16,19 @@ int	ft_usleep_eat(t_args *args, int index)
 {
 	int			last_fed;
 	int			time_eat;
-	int			dead_philo;
+	int			death_value;
 
 	pthread_mutex_lock(&args->mutex);
 	last_fed = args->last_fed;
 	time_eat = args->time_eat;
 	pthread_mutex_unlock(&args->mutex);
-	//printf("index: %d, last fed: %d\n", index, last_fed);
 	while (get_rel_time(args->start_time) - last_fed < time_eat)
 	{
 		pthread_mutex_lock(&args->common_data->deadphil_mutex);
-		dead_philo = args->common_data->death;
+		death_value = args->common_data->death;
 		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 		usleep(200);
-		if (dead_philo == 1 || check_death(args, index))
+		if (death_value == 1 || check_death(args, index))
 		{
 			//printf("eat check %d\n", index);
 			return (1);
@@ -70,6 +69,7 @@ int	monitor_death_end(t_args *args, t_common *common_data)
         //usleep(1000); // Sleep for 1 millisecond to reduce CPU usage
 		if (check_death(&args[i], i + 1) || common_data->ended)
 		{
+			//printf("%d check %d\n", get_rel_time(common_data->start_time), i + 1);
 			return 1;
 		}
 		i++;
@@ -78,4 +78,19 @@ int	monitor_death_end(t_args *args, t_common *common_data)
 			i = 0;
 		}
     }
+}
+
+int	philo_putstr(char *s, int fd)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
+	return (i);
 }

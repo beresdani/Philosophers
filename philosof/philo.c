@@ -64,7 +64,7 @@ int	main(int argc, char **argv)
 	}
 	monitor_death_end(args, common_data);
 	thread_join_loop(args, philo);
-	return (free_args(args), 0);
+	return (free_args(args, common_data->num_phil), 0);
 }
 
 int	check_mallocs(pthread_mutex_t *fork_array,

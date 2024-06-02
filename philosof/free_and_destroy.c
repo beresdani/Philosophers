@@ -50,7 +50,7 @@ void	destroyer(pthread_mutex_t *fork_array, int i)
 	}
 }
 
-void	free_args(t_args *args)
+void	free_args(t_args *args, int last)
 {
 	int	i;
 
@@ -59,7 +59,7 @@ void	free_args(t_args *args)
 		return ;
 	if (args->fork_array != NULL)
 	{
-		while (i < args->common_data->num_phil)
+		while (i < last)
 		{
 			pthread_mutex_destroy(&args->fork_array[i]);
 			i++;

@@ -68,7 +68,7 @@ int					check_death(t_args *args, int index);
 int					check_end(t_args *args, int num_eats);
 int					time_till_death(t_args *args);
 void				print_fork_array(t_args *args);
-void				sleep_cycle(t_args *args, int index);
+int					sleep_cycle(t_args *args, int index);
 void				think_cycle(t_args *args, int index);
 int					odd_loop(t_args *args, int index);
 int					even_loop(t_args *args, int index);
@@ -82,7 +82,7 @@ void				free_phil_index(t_args *args);
 void				destroyer(pthread_mutex_t *fork_array, int i);
 void				free_2d_array_i(void ***arr, int i);
 void				free_2d_array(void **ptr);
-void				free_args(t_args *args);
+void				free_args(t_args *args, int last);
 void				free_threads(pthread_t *philo, int num_phil);
 void				free_index(t_args *args);
 void				fill_args(t_args *args, char **argv, t_common *common_data,
@@ -91,6 +91,7 @@ void				fill_endparams(t_args *args, char **argv);
 int					fill_times(t_args *args, int i);
 void				break_death(t_args *args, pthread_t *philo);
 void				break_ended(t_args *args, pthread_t *philo);
+void				break_fail(t_args *args, pthread_t *philo, int last);
 int					check_join(t_args *args, pthread_t *philo);
 int					create_threads(t_args *args, pthread_t *philo, int i);
 int					check_args(t_args *args, t_common *common_data);
@@ -111,5 +112,6 @@ int					check_mallocs(pthread_mutex_t	*fork_array,
 						t_common *common_data, t_args *args, int num_phil);
 void				unlocker(t_args *args, int index);
 int					monitor_death_end(t_args *args, t_common *common_data);
+int					philo_putstr(char *s, int fd);
 
 #endif

@@ -59,7 +59,6 @@ int	check_join(t_args *args, pthread_t *philo)
 	pthread_mutex_lock(&args->common_data->print_mutex);
 	ended = args->common_data->ended;
 	pthread_mutex_unlock(&args->common_data->print_mutex);
-	//usleep(100);
 	if (death)
 	{
 		break_death(args, philo);

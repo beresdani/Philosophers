@@ -30,9 +30,10 @@ int	create_threads(t_args *args, pthread_t *philo, int i)
 {
 	if (pthread_create(&philo[i], NULL, &routine, args) != 0)
 	{
-		free_args(args);
+		break_fail(args, philo, i);
+		free_args(args, i);
 		//use putstr to standard error 2
-		printf("Failed to create thread\n");
+		philo_putstr("Failed to create thread\n", 2);
 		return (1);
 	}
 	return (0);
