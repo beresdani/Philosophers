@@ -30,7 +30,6 @@ int	sleep_cycle(t_args *args, int index)
 	pthread_mutex_unlock(&args->common_data->print_mutex);
 	if (ft_usleep_sleep(args, index))
 	{
-		printf("%d check while sleeping: %d\n", get_rel_time(args->start_time), index);
 		return (1);
 	}
 	return (0);

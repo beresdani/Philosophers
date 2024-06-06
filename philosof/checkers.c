@@ -33,6 +33,7 @@ int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array, int nu
 	common_data->num_phil = num_phil;
 	common_data->dead_philo = -1;
 	common_data->death = 0;
+	common_data->death_print = 0;
 	common_data->ended = 0;
 	common_data->start_time = get_timestamp();
 	return (0);
@@ -50,25 +51,22 @@ int	check_fork_array(pthread_mutex_t *fork_array)
 
 int	check_join(t_args *args, pthread_t *philo)
 {
-	int	death;
-	int	ended;
+	int	i;
+	int	num_phil;
 
-	pthread_mutex_lock(&args->common_data->deadphil_mutex);
-	death = args->common_data->death;
-	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
-	pthread_mutex_lock(&args->common_data->print_mutex);
-	ended = args->common_data->ended;
-	pthread_mutex_unlock(&args->common_data->print_mutex);
-	if (death)
+	i = 0;
+	num_phil = args->common_data->num_phil;
+	//pthread_mutex_unlock(&args->common_data->print_mutex);
+	while (i < num_phil)
 	{
-		break_death(args, philo);
-		return (1);
+		pthread_join(philo[i], NULL);
+		i++;
 	}
-	if (ended)
+	/*if (ended)
 	{
 		break_ended(args, philo);
 		return (1);
-	}
+	}*/
 	return (0);
 }
 
@@ -93,6 +91,8 @@ int	check_death(t_args *args, int index)
 		if (dead_philo == -1)
 			args->common_data->dead_philo = index;
 		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		if (args->common_data->death_print == 0)
+			print_death(args);
 		return (1);
 	}
 	return (0);

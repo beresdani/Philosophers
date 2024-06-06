@@ -63,7 +63,7 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	monitor_death_end(args, common_data);
-	thread_join_loop(args, philo);
+	check_join(args, philo);
 	return (free_args(args, common_data->num_phil), 0);
 }
 

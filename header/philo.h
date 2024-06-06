@@ -48,6 +48,7 @@ typedef struct s_common
 	int				num_phil;
 	int				ended;
 	int				death;
+	int				death_print;
 	int				dead_philo;
 	long long		start_time;
 	pthread_mutex_t	print_mutex;
@@ -89,7 +90,7 @@ void				fill_args(t_args *args, char **argv, t_common *common_data,
 						pthread_mutex_t *fork_array);
 void				fill_endparams(t_args *args, char **argv);
 int					fill_times(t_args *args, int i);
-void				break_death(t_args *args, pthread_t *philo);
+void				print_death(t_args *args);
 void				break_ended(t_args *args, pthread_t *philo);
 void				break_fail(t_args *args, pthread_t *philo, int last);
 int					check_join(t_args *args, pthread_t *philo);
