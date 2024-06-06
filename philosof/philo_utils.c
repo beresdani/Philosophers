@@ -74,6 +74,11 @@ int	check_input(int argc, char **argv)
 		printf("Wrong input\n");
 		return (1);
 	}
+	if (philo_atoi(argv[1]) > 200)
+	{
+		printf("Wrong input\n");
+		return (1);
+	}
 	i = 0;
 	while (i < argc - 1)
 	{

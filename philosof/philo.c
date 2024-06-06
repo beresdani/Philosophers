@@ -18,7 +18,7 @@ void	*routine(void *arg)
 	t_args	*args;
 
 	args = (t_args *)arg;
-	index = *args->phil_index;
+	index = args->phil_index;
 	if (args->common_data->num_phil % 2 == 0)
 	{
 		if (index % 2 == 1)
@@ -35,7 +35,7 @@ void	*routine(void *arg)
 		else
 			even_loop(args, index);
 	}
-	free_index(args);
+	//free_index(args);
 	return (NULL);
 }
 

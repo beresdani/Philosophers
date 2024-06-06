@@ -55,9 +55,6 @@ int	fill_times(t_args *args, int i)
 {
 	args->start_time = args->common_data->start_time;
 	args->last_fed = get_rel_time(args->start_time);
-	args->phil_index = malloc(sizeof(int));
-	if (args->phil_index == NULL)
-		return (1);
-	*(args->phil_index) = i + 1;
+	args->phil_index = i + 1;
 	return (0);
 }

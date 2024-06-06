@@ -39,7 +39,7 @@ typedef struct s_args
 	long long		start_time;
 	int				num_rounds;
 	int				is_end;
-	int				*phil_index;
+	int				phil_index;
 	struct s_common	*common_data;
 }	t_args;
 

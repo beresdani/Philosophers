@@ -54,7 +54,10 @@ int	ft_usleep_sleep(t_args *args, int index)
 	{
 		usleep(200);
 		if (death_value == 1 || check_death(args, index))
+		{
+			//printf("%d check while sleeping: %d\n", get_rel_time(args->start_time), index);
 			return (1);
+		}
 	}
 	return (0);
 }

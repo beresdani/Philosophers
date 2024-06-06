@@ -29,6 +29,7 @@ void	free_2d_array(void **ptr)
 	}
 }
 
+/*
 void	free_index(t_args *args)
 {
 	if (args->phil_index != NULL)
@@ -36,7 +37,7 @@ void	free_index(t_args *args)
 		free(args->phil_index);
 		args->phil_index = NULL;
 	}
-}
+}*/
 
 void	destroyer(pthread_mutex_t *fork_array, int i)
 {

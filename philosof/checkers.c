@@ -77,6 +77,7 @@ int	check_death(t_args *args, int index)
 	int	dead_philo;
 	int	last_fed;
 
+	//printf("%d check while sleeping: %d\n", get_rel_time(args->start_time), index);
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	dead_philo = args->common_data->dead_philo;
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
