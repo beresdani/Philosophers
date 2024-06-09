@@ -40,6 +40,7 @@ typedef struct s_args
 	int				num_rounds;
 	int				is_end;
 	int				phil_index;
+	int				num_phil;
 	struct s_common	*common_data;
 }	t_args;
 
@@ -70,12 +71,11 @@ int					check_end(t_args *args, int num_eats);
 int					time_till_death(t_args *args);
 void				print_fork_array(t_args *args);
 int					sleep_cycle(t_args *args, int index);
-void				think_cycle(t_args *args, int index);
+int					think_cycle(t_args *args, int index);
 int					odd_loop(t_args *args, int index);
 int					even_loop(t_args *args, int index);
-int					last_phil_loop(t_args *args, int index);
-int					try_to_eat(t_args *args, int index);
-int					try_to_eat_last(t_args *args, int index);
+int					try_to_eat_odd(t_args *args, int index);
+int					try_to_eat_even(t_args *args, int index);
 void				stop_eating(t_args *args, int index);
 int					mutex_initializer(pthread_mutex_t *fork_array,
 						int num_phil);
@@ -114,5 +114,9 @@ int					check_mallocs(pthread_mutex_t	*fork_array,
 void				unlocker(t_args *args, int index);
 int					monitor_death_end(t_args *args, t_common *common_data);
 int					philo_putstr(char *s, int fd);
+int					pick_left_fork_even(t_args *args, int index);
+int					pick_right_fork_even(t_args *args, int index);
+int					pick_left_fork_odd(t_args *args, int index);
+int					pick_right_fork_odd(t_args *args, int index);
 
 #endif

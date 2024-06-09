@@ -35,6 +35,29 @@ int	sleep_cycle(t_args *args, int index)
 	return (0);
 }
 
+int	think_cycle(t_args *args, int index)
+{
+	pthread_mutex_lock(&args->common_data->deadphil_mutex);
+	if (args->common_data->death == 0)
+	{
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		pthread_mutex_lock(&args->common_data->print_mutex);
+		printf("%d %d is thinking\n",
+			get_rel_time(args->start_time), index);
+		pthread_mutex_unlock(&args->common_data->print_mutex);
+		if (args->time_sleep < args->time_eat)
+			usleep((args->time_eat - args->time_sleep) * 1000 + 2000);
+		else
+			usleep(2000);
+		return (0);
+	}
+	else
+	{
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		return (1);
+	}
+}
+
 void	eat_printer(t_args *args, int index)
 {
 	pthread_mutex_lock(&args->common_data->print_mutex);

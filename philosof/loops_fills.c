@@ -47,6 +47,7 @@ void	fill_args(t_args *args, char **argv, t_common *common_data,
 	args->time_to_die = philo_atoi(argv[2]);
 	args->time_eat = philo_atoi(argv[3]);
 	args->time_sleep = philo_atoi(argv[4]);
+	args->num_phil = philo_atoi(argv[1]);
 	args->is_end = 0;
 	args->fork_array = fork_array;
 }

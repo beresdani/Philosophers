@@ -71,6 +71,7 @@ void	free_args(t_args *args, int last)
 	{
 		pthread_mutex_destroy(&args->common_data->print_mutex);
 		pthread_mutex_destroy(&args->common_data->deadphil_mutex);
+		pthread_mutex_destroy(&args->mutex);
 		free(args->common_data);
 	}
 	free(args);

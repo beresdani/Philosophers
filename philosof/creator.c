@@ -32,7 +32,6 @@ int	create_threads(t_args *args, pthread_t *philo, int i)
 	{
 		break_fail(args, philo, i);
 		free_args(args, i);
-		//use putstr to standard error 2
 		philo_putstr("Failed to create thread\n", 2);
 		return (1);
 	}

@@ -12,7 +12,8 @@
 
 #include "philo.h"
 
-int	check_common_data(t_common *common_data, pthread_mutex_t *fork_array, int num_phil)
+int	check_common_data(t_common *common_data,
+	pthread_mutex_t *fork_array, int num_phil)
 {
 	if (common_data == NULL)
 	{
@@ -56,17 +57,11 @@ int	check_join(t_args *args, pthread_t *philo)
 
 	i = 0;
 	num_phil = args->common_data->num_phil;
-	//pthread_mutex_unlock(&args->common_data->print_mutex);
 	while (i < num_phil)
 	{
 		pthread_join(philo[i], NULL);
 		i++;
 	}
-	/*if (ended)
-	{
-		break_ended(args, philo);
-		return (1);
-	}*/
 	return (0);
 }
 
@@ -75,7 +70,6 @@ int	check_death(t_args *args, int index)
 	int	dead_philo;
 	int	last_fed;
 
-	//printf("%d check while sleeping: %d\n", get_rel_time(args->start_time), index);
 	pthread_mutex_lock(&args->common_data->deadphil_mutex);
 	dead_philo = args->common_data->dead_philo;
 	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
@@ -91,8 +85,10 @@ int	check_death(t_args *args, int index)
 		if (dead_philo == -1)
 			args->common_data->dead_philo = index;
 		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		pthread_mutex_lock(&args->common_data->print_mutex);
 		if (args->common_data->death_print == 0)
 			print_death(args);
+		pthread_mutex_unlock(&args->common_data->print_mutex);
 		return (1);
 	}
 	return (0);

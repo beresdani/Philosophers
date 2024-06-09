@@ -19,23 +19,10 @@ void	*routine(void *arg)
 
 	args = (t_args *)arg;
 	index = args->phil_index;
-	if (args->common_data->num_phil % 2 == 0)
-	{
-		if (index % 2 == 1)
-			odd_loop(args, index);
-		else
-			even_loop(args, index);
-	}
+	if (index % 2 == 1)
+		odd_loop(args, index);
 	else
-	{
-		if (index == args->common_data->num_phil)
-			last_phil_loop(args, index);
-		else if (index % 2 == 1)
-			odd_loop(args, index);
-		else
-			even_loop(args, index);
-	}
-	//free_index(args);
+		even_loop(args, index);
 	return (NULL);
 }
 
@@ -92,7 +79,6 @@ int	check_args(t_args *args, t_common *common_data)
 {
 	if (args == NULL)
 	{
-		//fork array, free everything
 		free (common_data);
 		return (1);
 	}

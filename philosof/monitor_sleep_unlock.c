@@ -16,7 +16,6 @@ int	ft_usleep_eat(t_args *args, int index)
 {
 	int			last_fed;
 	int			time_eat;
-	int			death_value;
 
 	pthread_mutex_lock(&args->mutex);
 	last_fed = args->last_fed;
@@ -24,15 +23,16 @@ int	ft_usleep_eat(t_args *args, int index)
 	pthread_mutex_unlock(&args->mutex);
 	while (get_rel_time(args->start_time) - last_fed < time_eat)
 	{
-		pthread_mutex_lock(&args->common_data->deadphil_mutex);
-		death_value = args->common_data->death;
-		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 		usleep(200);
-		if (death_value == 1 || check_death(args, index))
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		if (args->common_data->death == 1)
 		{
-			//printf("eat check %d\n", index);
+			pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 			return (1);
 		}
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		if (check_death(args, index))
+			return (1);
 	}
 	return (0);
 }
@@ -41,46 +41,40 @@ int	ft_usleep_sleep(t_args *args, int index)
 {
 	int			sleep_start;
 	int			time_sleep;
-	int			death_value;
 
 	pthread_mutex_lock(&args->mutex);
 	sleep_start = get_rel_time(args->start_time);
 	time_sleep = args->time_sleep;
 	pthread_mutex_unlock(&args->mutex);
-	pthread_mutex_lock(&args->common_data->deadphil_mutex);
-	death_value = args->common_data->death;
-	pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 	while (get_rel_time(args->start_time) - sleep_start < time_sleep)
 	{
 		usleep(200);
-		if (death_value == 1 || check_death(args, index))
+		pthread_mutex_lock(&args->common_data->deadphil_mutex);
+		if (args->common_data->death == 1)
 		{
-			//printf("%d check while sleeping: %d\n", get_rel_time(args->start_time), index);
+			pthread_mutex_unlock(&args->common_data->deadphil_mutex);
 			return (1);
 		}
+		pthread_mutex_unlock(&args->common_data->deadphil_mutex);
+		if (check_death(args, index))
+			return (1);
 	}
 	return (0);
 }
 
 int	monitor_death_end(t_args *args, t_common *common_data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (1)
-    {
-        //usleep(1000); // Sleep for 1 millisecond to reduce CPU usage
+	{
 		if (check_death(&args[i], i + 1) || common_data->ended)
-		{
-			//printf("%d check %d\n", get_rel_time(common_data->start_time), i + 1);
-			return 1;
-		}
+			return (1);
 		i++;
 		if (i >= common_data->num_phil)
-		{
 			i = 0;
-		}
-    }
+	}
 }
 
 int	philo_putstr(char *s, int fd)
